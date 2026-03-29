@@ -1,0 +1,2361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AimHigh GCSE</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a12;
+  --surface: #12121e;
+  --card: #1a1a2e;
+  --border: #2a2a42;
+  --text: #f0f0ff;
+  --muted: #8888aa;
+  --eng: #ff6b6b;
+  --eng-dim: #3a1a1a;
+  --math: #4ecdc4;
+  --math-dim: #0d2e2c;
+  --sci: #ffe66d;
+  --sci-dim: #2e2a0a;
+  --bio: #6bcb77;
+  --chem: #4d9de0;
+  --phy: #e15f99;
+  --accent: #7c5cfc;
+  --gold: #ffd700;
+  --green: #00e676;
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── ANIMATED BG ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 20%, rgba(124,92,252,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 80% 80%, rgba(78,205,196,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 60% 10%, rgba(255,107,107,0.07) 0%, transparent 50%);
+  pointer-events: none; z-index: 0;
+}
+
+/* ── NAV ── */
+#nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(10,10,18,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 20px; height: 60px;
+}
+.nav-brand {
+  font-weight: 900; font-size: 1.3rem; letter-spacing: -0.5px;
+  background: linear-gradient(135deg, var(--accent), var(--math));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.nav-brand span { -webkit-text-fill-color: var(--text); font-weight: 300; font-size: 0.85rem; display: block; letter-spacing: 2px; }
+.nav-tabs { display: flex; gap: 4px; }
+.nav-tab {
+  background: none; border: none; color: var(--muted); font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem; font-weight: 600; letter-spacing: 0.5px;
+  padding: 6px 12px; border-radius: 8px; cursor: pointer; transition: all 0.2s;
+  text-transform: uppercase;
+}
+.nav-tab:hover { color: var(--text); background: var(--border); }
+.nav-tab.active { color: var(--accent); background: rgba(124,92,252,0.15); }
+.nav-right { display: flex; align-items: center; gap: 10px; }
+.streak-badge {
+  background: rgba(255,215,0,0.15); border: 1px solid rgba(255,215,0,0.3);
+  border-radius: 20px; padding: 4px 10px; font-size: 0.78rem; font-weight: 700; color: var(--gold);
+}
+.xp-badge {
+  background: rgba(124,92,252,0.2); border: 1px solid rgba(124,92,252,0.4);
+  border-radius: 20px; padding: 4px 10px; font-size: 0.78rem; font-weight: 700; color: var(--accent);
+}
+
+/* ── LAYOUT ── */
+#app { position: relative; z-index: 1; }
+.screen { display: none; min-height: calc(100vh - 60px); padding: 24px 20px; max-width: 900px; margin: 0 auto; }
+.screen.active { display: block; }
+
+/* ── CARDS ── */
+.card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 20px; margin-bottom: 16px;
+}
+.card-sm { padding: 14px; border-radius: var(--radius-sm); }
+.card-accent { border-color: var(--accent); background: rgba(124,92,252,0.08); }
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 10px 20px; border-radius: 10px; border: none;
+  font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 0.9rem;
+  cursor: pointer; transition: all 0.18s; text-decoration: none;
+}
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: #6a4de0; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(124,92,252,0.4); }
+.btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--text); }
+.btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+.btn-eng { background: var(--eng); color: #fff; }
+.btn-math { background: var(--math); color: #0a0a12; }
+.btn-sci { background: var(--sci); color: #0a0a12; }
+.btn-sm { padding: 6px 14px; font-size: 0.82rem; border-radius: 8px; }
+.btn-lg { padding: 14px 28px; font-size: 1rem; border-radius: 12px; }
+.btn-full { width: 100%; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+/* ── TYPOGRAPHY ── */
+h1 { font-size: 2rem; font-weight: 900; letter-spacing: -1px; }
+h2 { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.5px; }
+h3 { font-size: 1.1rem; font-weight: 700; }
+.mono { font-family: 'Space Mono', monospace; }
+
+/* ── PROGRESS BARS ── */
+.progress-bar { background: var(--border); border-radius: 99px; height: 8px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 99px; transition: width 0.5s ease; }
+
+/* ── SUBJECT CHIPS ── */
+.chip {
+  display: inline-block; padding: 3px 10px; border-radius: 20px;
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
+}
+.chip-eng { background: rgba(255,107,107,0.2); color: var(--eng); }
+.chip-math { background: rgba(78,205,196,0.2); color: var(--math); }
+.chip-sci { background: rgba(255,230,109,0.2); color: var(--sci); }
+.chip-bio { background: rgba(107,203,119,0.2); color: var(--bio); }
+.chip-chem { background: rgba(77,157,224,0.2); color: var(--chem); }
+.chip-phy { background: rgba(225,95,153,0.2); color: var(--phy); }
+
+/* ── GRID ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+@media(max-width:600px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+/* ── SECTION HEADER ── */
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+
+/* ── TOAST ── */
+#toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px);
+  background: var(--card); border: 1px solid var(--accent);
+  padding: 12px 20px; border-radius: 10px; font-weight: 600;
+  transition: transform 0.3s; z-index: 999; white-space: nowrap;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+#toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ── MODAL ── */
+#modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(4px); z-index: 200; display: none;
+  align-items: center; justify-content: center; padding: 20px;
+}
+#modal-overlay.open { display: flex; }
+#modal-box {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 28px; max-width: 560px; width: 100%;
+  max-height: 85vh; overflow-y: auto;
+}
+
+/* ── FLASHCARD ── */
+.flashcard {
+  background: var(--card); border: 2px solid var(--border);
+  border-radius: 20px; padding: 32px 24px;
+  text-align: center; min-height: 180px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.3s; user-select: none;
+  position: relative; overflow: hidden;
+}
+.flashcard:hover { border-color: var(--accent); transform: translateY(-2px); }
+.flashcard .front { font-size: 1.1rem; font-weight: 600; }
+.flashcard .back { font-size: 0.95rem; color: var(--muted); display: none; }
+.flashcard.flipped .front { display: none; }
+.flashcard.flipped .back { display: block; color: var(--text); }
+
+/* ── QUIZ ── */
+.quiz-option {
+  background: var(--surface); border: 2px solid var(--border);
+  border-radius: var(--radius-sm); padding: 14px 18px;
+  cursor: pointer; transition: all 0.2s; margin-bottom: 10px;
+  font-size: 0.95rem;
+}
+.quiz-option:hover:not(.locked) { border-color: var(--accent); background: rgba(124,92,252,0.1); }
+.quiz-option.correct { border-color: var(--green); background: rgba(0,230,118,0.1); color: var(--green); }
+.quiz-option.wrong { border-color: var(--eng); background: rgba(255,107,107,0.1); color: var(--eng); }
+.quiz-option.locked { cursor: default; }
+
+/* ── TIMER ── */
+.timer-ring {
+  width: 80px; height: 80px; border-radius: 50%;
+  border: 4px solid var(--border); display: flex; align-items: center; justify-content: center;
+  font-family: 'Space Mono', monospace; font-size: 1.1rem; font-weight: 700;
+  position: relative;
+}
+.timer-ring.warning { border-color: var(--sci); color: var(--sci); }
+.timer-ring.danger { border-color: var(--eng); color: var(--eng); }
+
+/* ── PLANNER ── */
+.planner-day {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 12px;
+}
+.planner-day.today { border-color: var(--accent); background: rgba(124,92,252,0.08); }
+.planner-day.done { border-color: var(--green); background: rgba(0,230,118,0.06); }
+.planner-day.overdue { border-color: var(--eng); background: rgba(255,107,107,0.06); }
+.day-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); }
+.day-date { font-size: 1.1rem; font-weight: 800; }
+.day-task { font-size: 0.8rem; margin-top: 6px; color: var(--muted); }
+
+/* ── SUBJECT HERO ── */
+.subject-hero {
+  border-radius: var(--radius); padding: 24px; margin-bottom: 20px;
+  position: relative; overflow: hidden;
+}
+.subject-hero-eng { background: linear-gradient(135deg, var(--eng-dim), var(--card)); border: 1px solid var(--eng); }
+.subject-hero-math { background: linear-gradient(135deg, var(--math-dim), var(--card)); border: 1px solid var(--math); }
+.subject-hero-sci { background: linear-gradient(135deg, var(--sci-dim), var(--card)); border: 1px solid var(--sci); }
+
+/* ── ANSWER WORKSPACE ── */
+#answer-area {
+  width: 100%; min-height: 200px; background: var(--surface);
+  border: 2px solid var(--border); border-radius: var(--radius-sm);
+  color: var(--text); font-family: 'Outfit', sans-serif; font-size: 0.95rem;
+  padding: 16px; resize: vertical; line-height: 1.6;
+}
+#answer-area:focus { outline: none; border-color: var(--accent); }
+#answer-area::placeholder { color: var(--muted); }
+
+/* ── MARK FEEDBACK ── */
+.feedback-band {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 18px; border-radius: var(--radius-sm); margin-bottom: 10px;
+}
+.feedback-band.strength { background: rgba(0,230,118,0.1); border-left: 3px solid var(--green); }
+.feedback-band.weakness { background: rgba(255,107,107,0.1); border-left: 3px solid var(--eng); }
+.feedback-band.tip { background: rgba(124,92,252,0.1); border-left: 3px solid var(--accent); }
+
+/* ── BADGE ── */
+.badge {
+  width: 60px; height: 60px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem; border: 2px solid var(--border);
+}
+.badge.earned { border-color: var(--gold); background: rgba(255,215,0,0.12); }
+
+/* ── STAT BOX ── */
+.stat-box { text-align: center; padding: 16px 12px; }
+.stat-num { font-size: 2rem; font-weight: 900; font-family: 'Space Mono', monospace; }
+.stat-label { font-size: 0.75rem; color: var(--muted); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* ── MARKDOWN-LIKE FEEDBACK ── */
+.ai-feedback h3 { color: var(--accent); margin: 12px 0 6px; }
+.ai-feedback ul { padding-left: 18px; }
+.ai-feedback li { margin-bottom: 4px; font-size: 0.9rem; }
+.ai-feedback p { margin-bottom: 8px; font-size: 0.9rem; line-height: 1.6; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--surface); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp { from { opacity:0; transform: translateY(16px); } to { opacity:1; transform: none; } }
+.fadein { animation: fadeUp 0.35s ease both; }
+
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
+.pulsing { animation: pulse 1.5s infinite; }
+
+@keyframes celebrationPop {
+  0% { transform: scale(0.5); opacity: 0; }
+  70% { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.pop { animation: celebrationPop 0.4s ease both; }
+
+/* ── LEVEL BAR ── */
+.level-bar-wrap { margin-top: 6px; }
+.level-label { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--muted); margin-bottom: 4px; }
+
+/* ── SCROLLABLE TABS ── */
+.tab-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 16px; }
+.tab-row::-webkit-scrollbar { height: 3px; }
+.tab-btn {
+  flex-shrink: 0; background: var(--surface); border: 1px solid var(--border);
+  color: var(--muted); font-family: 'Outfit', sans-serif; font-size: 0.8rem;
+  font-weight: 600; padding: 6px 14px; border-radius: 20px; cursor: pointer;
+  transition: all 0.2s; white-space: nowrap;
+}
+.tab-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.tab-btn:hover:not(.active) { border-color: var(--muted); color: var(--text); }
+
+/* ── TOPIC ROW ── */
+.topic-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px; border-radius: var(--radius-sm);
+  background: var(--surface); border: 1px solid var(--border);
+  cursor: pointer; transition: all 0.18s; margin-bottom: 8px;
+}
+.topic-row:hover { border-color: var(--accent); background: rgba(124,92,252,0.07); }
+.topic-row .topic-icon { font-size: 1.3rem; flex-shrink: 0; }
+.topic-row .topic-info { flex: 1; }
+.topic-row .topic-name { font-weight: 700; font-size: 0.9rem; }
+.topic-row .topic-sub { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+.topic-row .topic-strength {
+  font-size: 0.72rem; font-weight: 700; padding: 3px 8px; border-radius: 20px;
+}
+.strength-weak { background: rgba(255,107,107,0.2); color: var(--eng); }
+.strength-ok { background: rgba(255,230,109,0.2); color: var(--sci); }
+.strength-strong { background: rgba(0,230,118,0.2); color: var(--green); }
+
+/* ── MOBILE ── */
+@media(max-width: 600px) {
+  .nav-tabs { display: none; }
+  h1 { font-size: 1.5rem; }
+  .screen { padding: 16px 14px; }
+  .btn-lg { padding: 12px 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div>
+    <div class="nav-brand">AimHigh<span>GCSE</span></div>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="goTo('dashboard')">Dashboard</button>
+    <button class="nav-tab" onclick="goTo('english')">English</button>
+    <button class="nav-tab" onclick="goTo('maths')">Maths</button>
+    <button class="nav-tab" onclick="goTo('science')">Science</button>
+    <button class="nav-tab" onclick="goTo('planner')">Planner</button>
+    <button class="nav-tab" onclick="goTo('progress')">Progress</button>
+    <button class="nav-tab" onclick="goTo('rewards')">Rewards</button>
+    <button class="nav-tab" onclick="goTo('tips')">Tips</button>
+  </div>
+  <div class="nav-right">
+    <div class="streak-badge" id="nav-streak">🔥 0</div>
+    <div class="xp-badge" id="nav-xp">⚡ 0 XP</div>
+  </div>
+</nav>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- MODAL -->
+<div id="modal-overlay">
+  <div id="modal-box" id="modal-content"></div>
+</div>
+
+<!-- APP -->
+<div id="app">
+
+<!-- ═══════════════════════════════════
+     DASHBOARD
+════════════════════════════════════ -->
+<div id="screen-dashboard" class="screen active">
+  <div class="fadein">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
+      <div>
+        <h1 id="greeting">Good morning! 👋</h1>
+        <p style="color:var(--muted);margin-top:4px;">Your revision command centre.</p>
+      </div>
+      <div id="countdown-chip" style="background:rgba(124,92,252,0.15);border:1px solid var(--accent);border-radius:12px;padding:10px 18px;text-align:center;">
+        <div style="font-size:1.6rem;font-weight:900;font-family:'Space Mono',monospace;" id="days-left">—</div>
+        <div style="font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;">Days to Exam</div>
+      </div>
+    </div>
+
+    <!-- Stats row -->
+    <div class="grid-3" style="margin-bottom:16px;">
+      <div class="card card-sm stat-box">
+        <div class="stat-num" id="stat-streak" style="color:var(--gold);">0</div>
+        <div class="stat-label">Day Streak 🔥</div>
+      </div>
+      <div class="card card-sm stat-box">
+        <div class="stat-num" id="stat-xp" style="color:var(--accent);">0</div>
+        <div class="stat-label">Total XP ⚡</div>
+      </div>
+      <div class="card card-sm stat-box">
+        <div class="stat-num" id="stat-topics" style="color:var(--green);">0</div>
+        <div class="stat-label">Topics Covered ✅</div>
+      </div>
+    </div>
+
+    <div id="srs-due-banner"></div>
+
+    <!-- Today's plan -->
+    <div class="card" style="margin-bottom:16px;">
+      <div class="section-header">
+        <h3>📋 Today's Focus</h3>
+        <button class="btn btn-outline btn-sm" onclick="goTo('planner')">See Full Plan</button>
+      </div>
+      <div id="today-focus">
+        <p style="color:var(--muted);font-size:0.9rem;">Set your exam date in the Planner to get a personalised daily schedule.</p>
+      </div>
+    </div>
+
+    <!-- Subject overview -->
+    <h3 style="margin-bottom:12px;">📚 Your Subjects</h3>
+    <div class="grid-3">
+      <div class="card subject-hero-eng" onclick="goTo('english')" style="cursor:pointer;">
+        <div style="font-size:2rem;margin-bottom:8px;">📖</div>
+        <div style="font-weight:800;font-size:1rem;color:var(--eng);">English</div>
+        <div style="font-size:0.78rem;color:var(--muted);margin-top:4px;">Language & Literature</div>
+        <div class="progress-bar" style="margin-top:12px;">
+          <div class="progress-fill" id="prog-eng" style="background:var(--eng);width:0%;"></div>
+        </div>
+        <div style="font-size:0.7rem;color:var(--muted);margin-top:4px;" id="prog-eng-label">0% covered</div>
+      </div>
+      <div class="card subject-hero-math" onclick="goTo('maths')" style="cursor:pointer;">
+        <div style="font-size:2rem;margin-bottom:8px;">🔢</div>
+        <div style="font-weight:800;font-size:1rem;color:var(--math);">Maths</div>
+        <div style="font-size:0.78rem;color:var(--muted);margin-top:4px;">Number, Algebra, Geometry</div>
+        <div class="progress-bar" style="margin-top:12px;">
+          <div class="progress-fill" id="prog-math" style="background:var(--math);width:0%;"></div>
+        </div>
+        <div style="font-size:0.7rem;color:var(--muted);margin-top:4px;" id="prog-math-label">0% covered</div>
+      </div>
+      <div class="card subject-hero-sci" onclick="goTo('science')" style="cursor:pointer;">
+        <div style="font-size:2rem;margin-bottom:8px;">🔬</div>
+        <div style="font-weight:800;font-size:1rem;color:var(--sci);">Science</div>
+        <div style="font-size:0.78rem;color:var(--muted);margin-top:4px;">Biology · Chemistry · Physics</div>
+        <div class="progress-bar" style="margin-top:12px;">
+          <div class="progress-fill" id="prog-sci" style="background:var(--sci);width:0%;"></div>
+        </div>
+        <div style="font-size:0.7rem;color:var(--muted);margin-top:4px;" id="prog-sci-label">0% covered</div>
+      </div>
+    </div>
+
+    <!-- Quick actions -->
+    <h3 style="margin:20px 0 12px;">⚡ Quick Start</h3>
+    <div class="grid-2">
+      <button class="btn btn-primary btn-lg" onclick="startQuickQuiz()">🎯 Quick Quiz</button>
+      <button class="btn btn-outline btn-lg" onclick="fcSubj='random';fcContainer=document.getElementById('modal-box');fcCards=buildSessionQueue('random');fcIndex=0;fcFlipped=false;fcAgainCounts={};renderFlashcard();openModal()">🃏 Flashcards</button>
+      <button class="btn btn-outline btn-lg" onclick="goTo('planner')">📅 Update Planner</button>
+      <button class="btn btn-outline btn-lg" onclick="goTo('progress')">📊 View Progress</button>
+    </div>
+
+    <!-- Weak topics -->
+    <div class="card" style="margin-top:16px;">
+      <div class="section-header">
+        <h3>⚠️ Needs Attention</h3>
+      </div>
+      <div id="weak-topics-list">
+        <p style="color:var(--muted);font-size:0.88rem;">Complete some quizzes to identify your weak spots.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     ENGLISH
+════════════════════════════════════ -->
+<div id="screen-english" class="screen">
+  <div class="fadein">
+    <div class="subject-hero subject-hero-eng">
+      <div style="display:flex;align-items:center;gap:16px;">
+        <div style="font-size:3rem;">📖</div>
+        <div>
+          <h2 style="color:var(--eng);">English GCSE</h2>
+          <p style="color:var(--muted);font-size:0.88rem;">Language · Literature · Exam Technique</p>
+        </div>
+      </div>
+    </div>
+    <div class="tab-row" id="eng-tabs">
+      <button class="tab-btn active" onclick="engTab('topics')">Topics</button>
+      <button class="tab-btn" onclick="engTab('flashcards')">Flashcards</button>
+      <button class="tab-btn" onclick="engTab('quiz')">Quiz</button>
+      <button class="tab-btn" onclick="engTab('write')">Write & Mark</button>
+      <button class="tab-btn" onclick="engTab('technique')">Technique</button>
+    </div>
+    <div id="eng-content"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     MATHS
+════════════════════════════════════ -->
+<div id="screen-maths" class="screen">
+  <div class="fadein">
+    <div class="subject-hero subject-hero-math">
+      <div style="display:flex;align-items:center;gap:16px;">
+        <div style="font-size:3rem;">🔢</div>
+        <div>
+          <h2 style="color:var(--math);">Maths GCSE</h2>
+          <p style="color:var(--muted);font-size:0.88rem;">Number · Algebra · Geometry · Statistics</p>
+        </div>
+      </div>
+    </div>
+    <div class="tab-row" id="math-tabs">
+      <button class="tab-btn active" onclick="mathTab('topics')">Topics</button>
+      <button class="tab-btn" onclick="mathTab('flashcards')">Flashcards</button>
+      <button class="tab-btn" onclick="mathTab('quiz')">Quiz</button>
+      <button class="tab-btn" onclick="mathTab('write')">Problem Practice</button>
+      <button class="tab-btn" onclick="mathTab('technique')">Technique</button>
+    </div>
+    <div id="math-content"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     SCIENCE
+════════════════════════════════════ -->
+<div id="screen-science" class="screen">
+  <div class="fadein">
+    <div class="subject-hero subject-hero-sci">
+      <div style="display:flex;align-items:center;gap:16px;">
+        <div style="font-size:3rem;">🔬</div>
+        <div>
+          <h2 style="color:var(--sci);">Science GCSE</h2>
+          <p style="color:var(--muted);font-size:0.88rem;">Biology · Chemistry · Physics</p>
+        </div>
+      </div>
+    </div>
+    <div class="tab-row" id="sci-tabs">
+      <button class="tab-btn active" onclick="sciTab('topics')">Topics</button>
+      <button class="tab-btn" onclick="sciTab('flashcards')">Flashcards</button>
+      <button class="tab-btn" onclick="sciTab('quiz')">Quiz</button>
+      <button class="tab-btn" onclick="sciTab('write')">Write & Mark</button>
+      <button class="tab-btn" onclick="sciTab('technique')">Technique</button>
+    </div>
+    <div id="sci-content"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     PLANNER
+════════════════════════════════════ -->
+<div id="screen-planner" class="screen">
+  <div class="fadein">
+    <h2 style="margin-bottom:6px;">📅 Revision Planner</h2>
+    <p style="color:var(--muted);margin-bottom:20px;font-size:0.88rem;">Build backwards from your exam date.</p>
+
+    <div class="card" id="planner-setup">
+      <h3 style="margin-bottom:16px;">⚙️ Setup Your Plan</h3>
+      <div class="grid-2">
+        <div>
+          <label style="font-size:0.8rem;color:var(--muted);display:block;margin-bottom:6px;">Exam Date</label>
+          <input type="date" id="exam-date" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Outfit',sans-serif;font-size:0.9rem;padding:10px;">
+        </div>
+        <div>
+          <label style="font-size:0.8rem;color:var(--muted);display:block;margin-bottom:6px;">Study Days Per Week</label>
+          <select id="study-days" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Outfit',sans-serif;font-size:0.9rem;padding:10px;">
+            <option value="3">3 days</option>
+            <option value="4">4 days</option>
+            <option value="5" selected>5 days</option>
+            <option value="6">6 days</option>
+            <option value="7">7 days</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:0.8rem;color:var(--muted);display:block;margin-bottom:6px;">Minutes Per Session</label>
+          <select id="study-mins" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Outfit',sans-serif;font-size:0.9rem;padding:10px;">
+            <option value="30">30 min</option>
+            <option value="45" selected>45 min</option>
+            <option value="60">60 min</option>
+            <option value="90">90 min</option>
+          </select>
+        </div>
+        <div style="display:flex;align-items:flex-end;">
+          <button class="btn btn-primary btn-full" onclick="buildPlan()">Build My Plan →</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="planner-output" style="margin-top:16px;"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     PROGRESS
+════════════════════════════════════ -->
+<div id="screen-progress" class="screen">
+  <div class="fadein">
+    <h2 style="margin-bottom:6px;">📊 Your Progress</h2>
+    <p style="color:var(--muted);margin-bottom:20px;font-size:0.88rem;">Track mastery and identify gaps.</p>
+
+    <div class="grid-3" style="margin-bottom:16px;">
+      <div class="card card-sm stat-box">
+        <div class="stat-num" id="p-quizzes" style="color:var(--accent);">0</div>
+        <div class="stat-label">Quizzes Done</div>
+      </div>
+      <div class="card card-sm stat-box">
+        <div class="stat-num" id="p-correct" style="color:var(--green);">0%</div>
+        <div class="stat-label">Accuracy</div>
+      </div>
+      <div class="card card-sm stat-box">
+        <div class="stat-num" id="p-answers" style="color:var(--sci);">0</div>
+        <div class="stat-label">Answers Written</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px;">
+      <h3 style="margin-bottom:16px;">Subject Mastery</h3>
+      <div style="margin-bottom:14px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+          <span style="font-size:0.85rem;font-weight:700;color:var(--eng);">📖 English</span>
+          <span style="font-size:0.8rem;color:var(--muted);" id="mastery-eng-pct">0%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="mastery-eng" style="background:var(--eng);width:0%;"></div></div>
+      </div>
+      <div style="margin-bottom:14px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+          <span style="font-size:0.85rem;font-weight:700;color:var(--math);">🔢 Maths</span>
+          <span style="font-size:0.8rem;color:var(--muted);" id="mastery-math-pct">0%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="mastery-math" style="background:var(--math);width:0%;"></div></div>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+          <span style="font-size:0.85rem;font-weight:700;color:var(--sci);">🔬 Science</span>
+          <span style="font-size:0.8rem;color:var(--muted);" id="mastery-sci-pct">0%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="mastery-sci" style="background:var(--sci);width:0%;"></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-bottom:12px;">Topic Breakdown</h3>
+      <div id="topic-breakdown"></div>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-bottom:4px;">❌ Most Missed Questions</h3>
+      <p style="font-size:0.78rem;color:var(--muted);margin-bottom:12px;">Questions you've answered incorrectly most often.</p>
+      <div id="wrong-questions-panel"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     REWARDS
+════════════════════════════════════ -->
+<div id="screen-rewards" class="screen">
+  <div class="fadein">
+    <h2 style="margin-bottom:6px;">🏆 Rewards & Milestones</h2>
+    <p style="color:var(--muted);margin-bottom:20px;font-size:0.88rem;">Every step forward counts.</p>
+
+    <div class="card" style="margin-bottom:16px;">
+      <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+        <div style="text-align:center;">
+          <div style="font-size:3rem;font-weight:900;font-family:'Space Mono',monospace;" id="level-display">1</div>
+          <div style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;">Level</div>
+        </div>
+        <div style="flex:1;min-width:180px;">
+          <div class="level-label">
+            <span id="level-name">Beginner</span>
+            <span id="xp-display">0 / 100 XP</span>
+          </div>
+          <div class="progress-bar" style="height:12px;">
+            <div class="progress-fill" id="xp-bar" style="background:linear-gradient(90deg,var(--accent),var(--math));width:0%;"></div>
+          </div>
+          <div style="font-size:0.72rem;color:var(--muted);margin-top:4px;" id="level-next">100 XP to next level</div>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="margin-bottom:12px;">🎖️ Badges</h3>
+    <div id="badges-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     TIPS
+════════════════════════════════════ -->
+<div id="screen-tips" class="screen">
+  <div class="fadein">
+    <h2 style="margin-bottom:6px;">💡 Best Tips</h2>
+    <p style="color:var(--muted);margin-bottom:20px;font-size:0.88rem;">Examiner-backed strategies for top grades.</p>
+    <div class="tab-row" id="tips-tabs">
+      <button class="tab-btn active" onclick="tipsTab('recall')">Recall</button>
+      <button class="tab-btn" onclick="tipsTab('timing')">Timing</button>
+      <button class="tab-btn" onclick="tipsTab('answering')">Answering</button>
+      <button class="tab-btn" onclick="tipsTab('mistakes')">Mistakes to Avoid</button>
+      <button class="tab-btn" onclick="tipsTab('confidence')">Confidence</button>
+      <button class="tab-btn" onclick="tipsTab('examday')">Exam Day</button>
+    </div>
+    <div id="tips-content"></div>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<script>
+// ═══════════════════════════════════════════════════════
+// STATE & STORAGE
+// ═══════════════════════════════════════════════════════
+const STORAGE_KEY = 'aimhigh_gcse_v3';
+
+function loadState() {
+  try {
+    // Try v3 first
+    const v3 = localStorage.getItem(STORAGE_KEY);
+    if (v3) return { ...defaultState(), ...JSON.parse(v3) };
+    // Migrate from v2 if present
+    const v2 = localStorage.getItem('aimhigh_gcse_v2');
+    if (v2) {
+      const old = JSON.parse(v2);
+      return { ...defaultState(), ...old, srsCards: old.srsCards || {}, wrongQuestions: {}, streakGraceDays: 1 };
+    }
+    return defaultState();
+  } catch { return defaultState(); }
+}
+function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+
+function defaultState() {
+  return {
+    xp: 0,
+    streak: 0,
+    streakGraceDays: 1,          // grace days remaining before streak resets
+    lastStudyDate: null,
+    quizzesDone: 0,
+    quizCorrect: 0,
+    quizTotal: 0,
+    answersWritten: 0,
+    topicProgress: {},            // topicId -> { strength, score, quizCorrect, quizTotal }
+    wrongQuestions: {},           // questionText -> { count, subj, last }
+    plannerExamDate: null,
+    plannerDays: 5,
+    plannerMins: 45,
+    sessionsDone: [],
+    badges: [],
+    level: 1,
+    srsCards: {}                  // cardId -> { interval, ease, reps, due, lastRating }
+  };
+}
+
+let state = loadState();
+
+// ═══════════════════════════════════════════════════════
+// CURRICULUM DATA
+// ═══════════════════════════════════════════════════════
+const SUBJECTS = {
+  english: {
+    label: 'English',
+    color: 'var(--eng)',
+    topics: [
+      { id:'eng_reading_skills', name:'Reading Skills', icon:'👁️', subtopics:['AQA Paper 1 Reading','AQA Paper 2 Reading','Finding Explicit Info','Inference','Language Analysis','Structure Analysis','Comparison','Critical Evaluation'] },
+      { id:'eng_writing_skills', name:'Writing Skills', icon:'✍️', subtopics:['Descriptive Writing','Narrative Writing','Argumentative Writing','Persuasive Writing','Structural Choices','Vocabulary & Tone','Sentence-Level Techniques'] },
+      { id:'eng_language_analysis', name:'Language Analysis (AO2)', icon:'🔍', subtopics:['Metaphor & Simile','Personification','Alliteration & Sibilance','Repetition','Hyperbole','Word Choice (Diction)','Sentence Types & Effects'] },
+      { id:'eng_literature_power', name:'Power & Conflict Poetry', icon:'🎭', subtopics:['Ozymandias','London','The Prelude','My Last Duchess','Charge of the Light Brigade','Exposure','Storm on the Island','Bayonet Charge','Remains','Poppies','War Photographer','Tissue','The Emigrée','Kamikaze','Checking Out Me History'] },
+      { id:'eng_macbeth', name:'Macbeth', icon:'🗡️', subtopics:['Plot Overview','Ambition Theme','Power & Corruption','Supernatural','Macbeth Character','Lady Macbeth Character','Key Quotations','Essay Structure'] },
+      { id:'eng_jekyll_hyde', name:'Jekyll & Hyde', icon:'🧪', subtopics:['Plot Overview','Duality Theme','Science & Religion','Repression','Key Characters','Key Quotations','Essay Structure'] },
+      { id:'eng_exam_technique', name:'Exam Technique', icon:'📝', subtopics:['Command Words','Timing Per Question','PEE/PETAL Structure','15-Minute Planning','How to Improve Marks','Common Mistakes'] }
+    ],
+    flashcards: [
+      { id:'eng_fc_01', q:'What is a metaphor?', a:'A direct comparison saying one thing IS another, e.g. "He is a lion in battle."' },
+      { id:'eng_fc_02', q:'What does "hubris" mean in Ozymandias?', a:'Excessive pride or arrogance — Ozymandias boasts of his power but his statue lies ruined in the desert.' },
+      { id:'eng_fc_03', q:'What does AO2 assess?', a:'Assessment Objective 2: Analyse language, form, and structure used to create meanings and effects.' },
+      { id:'eng_fc_04', q:'What is sibilance?', a:'The repetition of "s" sounds, often creating a hissing effect to suggest menace, whispering, or calm.' },
+      { id:'eng_fc_05', q:'Give Macbeth\'s key ambition quotation.', a:'"I have no spur / To prick the sides of my intent, but only / Vaulting ambition" — Act 1 Scene 7.' },
+      { id:'eng_fc_06', q:'What does AO1 assess in English Literature?', a:'AO1: Read, understand and respond to texts, with relevant, developed quotations and references.' },
+      { id:'eng_fc_07', q:'What is enjambment?', a:'When a sentence or clause runs over from one line to the next without a pause — creates pace or unease.' },
+      { id:'eng_fc_08', q:'What command word means "write about differences AND similarities"?', a:'"Compare" — you must analyse both texts and point out similarities and differences explicitly.' },
+      { id:'eng_fc_09', q:'What is the rhyme scheme of "London" by Blake?', a:'ABAB — alternate rhyme, creating a steady, relentless march through London\'s suffering.' },
+      { id:'eng_fc_10', q:'What is an unreliable narrator?', a:'A narrator whose account is biased, incomplete, or deceptive — e.g. Dr Jekyll controlling the narrative in Jekyll & Hyde.' },
+      { id:'eng_fc_11', q:'What is a simile?', a:'A comparison using "like" or "as" — e.g. "He fought like a lion." Weaker than metaphor as it signals the comparison explicitly.' },
+      { id:'eng_fc_12', q:'What is semantic field?', a:'A group of words related to the same topic or idea, e.g. words of violence ("slash", "thrust", "wound") in a war poem.' },
+      { id:'eng_fc_13', q:'What is caesura?', a:'A pause within a line of poetry, often marked by punctuation. Creates dramatic effect, hesitation, or emphasis.' },
+      { id:'eng_fc_14', q:'What is the key theme of "Exposure" by Wilfred Owen?', a:'The real enemy is the weather, not the opposing army — nature and futility of war. "But nothing happens."' },
+      { id:'eng_fc_15', q:'Name the three AOs for AQA English Language Paper 1 Q4.', a:'AO1 (identify/interpret), AO2 (language analysis), AO4 (evaluate critically) — all assessed in the evaluation question.' },
+      { id:'eng_fc_16', q:'What is Lady Macbeth\'s key quotation showing ambition?', a:'"Come, you spirits / That tend on mortal thoughts, unsex me here" — Act 1 Sc 5. She invokes supernatural forces to strip away feminine compassion.' },
+      { id:'eng_fc_17', q:'What is the context of "My Last Duchess"?', a:'Written 1842, based on Alfonso II of Ferrara. A dramatic monologue revealing the Duke\'s jealousy, possessiveness, and control over women.' },
+      { id:'eng_fc_18', q:'What is pathetic fallacy?', a:'Using weather or setting to reflect a character\'s emotions or the mood of a scene — e.g. storms during moral disorder in Macbeth.' },
+      { id:'eng_fc_19', q:'What does "repression" mean in Jekyll & Hyde?', a:'Suppressing socially unacceptable desires. Hyde represents the repressed, animalistic side of Jekyll — and of Victorian society.' },
+      { id:'eng_fc_20', q:'What is the structural effect of beginning a sentence with a verb?', a:'Creates immediacy and urgency — drops the reader straight into action. E.g. "Run. Don\'t look back." feels more visceral than "He began to run."' }
+    ],
+    quiz: [
+      { q:'Which poetic technique uses the same consonant sound at the start of words?', options:['Sibilance','Alliteration','Assonance','Enjambment'], answer:1 },
+      { q:'In "Macbeth", who says "Out, damned spot"?', options:['Macbeth','Lady Macbeth','The Witches','Banquo'], answer:1 },
+      { q:'What does AQA Paper 1, Question 5 ask you to do?', options:['Analyse language','Write creatively','Compare two texts','Evaluate a source'], answer:1 },
+      { q:'Which century was "Strange Case of Dr Jekyll and Mr Hyde" published?', options:['17th century','18th century','19th century','20th century'], answer:2 },
+      { q:'What is the effect of a short, minor sentence?', options:['Creates pace and impact','Creates confusion','Shows complex thought','Shows long description'], answer:0 },
+      { q:'In Power & Conflict poetry, which poem is about the Crimean War?', options:['Exposure','Remains','Charge of the Light Brigade','Kamikaze'], answer:2 },
+      { q:'What does "explicit information" mean in reading?', options:['Information you infer','Clearly stated information','Hidden meanings','Figurative language'], answer:1 },
+      { q:'Which literary device is "The wind screamed through the trees"?', options:['Simile','Metaphor','Personification','Hyperbole'], answer:2 },
+      { q:'What is the purpose of a rhetorical question in persuasive writing?', options:['To confuse the reader','To demand an answer','To engage and provoke thought','To introduce new evidence'], answer:2 },
+      { q:'What is the dominant theme of "Ozymandias" by Shelley?', options:['Love and loss','The power of nature','Inevitable decay of power','War and conflict'], answer:2 },
+      { q:'What does AO3 assess in English Literature?', options:['Language analysis','Context and its relationship to texts','Writing quality','Spelling and punctuation'], answer:1 },
+      { q:'In Jekyll & Hyde, what does Hyde physically represent?', options:['Science and progress','Jekyll\'s repressed desires','The working class','Victorian wealth'], answer:1 },
+      { q:'What is a volta in a sonnet?', options:['The final couplet','A turning point or shift in argument','The rhyme scheme','The opening line'], answer:1 },
+      { q:'Which technique is used in "Remains" to reflect soldier\'s guilt?', options:['Metaphor','Flashback/repetition of memory','Rhyme scheme','Personification of war'], answer:1 },
+      { q:'What does the word "anaphora" mean?', options:['Ending lines with the same word','Repeating the same word or phrase at the start of lines','A type of rhyme','A comparison using "like"'], answer:1 },
+      { q:'AQA Paper 2, Question 2 asks you to...', options:['Write a story','Summarise differences between two texts','Analyse language in one source','Write a speech'], answer:1 },
+      { q:'What type of narrator is used in "My Last Duchess"?', options:['Third person omniscient','First person unreliable dramatic monologue','Second person','Third person limited'], answer:1 },
+      { q:'What is the effect of a list of three (tricolon)?', options:['Creates uncertainty','Creates rhythm, emphasis and completeness','Shows the writer is confused','Slows the pace of reading'], answer:1 },
+      { q:'Which poem in Power & Conflict features the poet\'s grandmother?', options:['Tissue','Kamikaze','Poppies','The Emigrée'], answer:1 },
+      { q:'What does "structure" refer to in English analysis?', options:['The choice of individual words','How a text is organised (order, sequence, shifts)','The rhyme scheme only','The number of paragraphs'], answer:1 }
+    ],
+    technique: `<h3 style="color:var(--eng);margin-bottom:12px;">English Exam Technique</h3>
+<div class="card" style="margin-bottom:12px;"><strong>📋 The PEA Framework</strong><br><span style="color:var(--muted);font-size:0.88rem;margin-top:6px;display:block;"><b>P</b>oint → <b>E</b>vidence (quotation) → <b>A</b>nalysis (language technique + effect on reader)</span></div>
+<div class="card" style="margin-bottom:12px;"><strong>⏱️ Timing (AQA)</strong><br><span style="color:var(--muted);font-size:0.88rem;margin-top:6px;display:block;">Paper 1: 1hr 45min — Q1 (5 min), Q2 (10 min), Q3 (10 min), Q4 (20 min), Q5 (45 min planning + writing)<br>Paper 2: 1hr 45min — similar distribution. STICK TO TIME.</span></div>
+<div class="card" style="margin-bottom:12px;"><strong>🔍 Command Word Guide</strong><br><span style="color:var(--muted);font-size:0.88rem;margin-top:6px;display:block;"><b>List/Identify</b> = simple facts only. <b>Summarise/Synthesise</b> = pull together points in your own words. <b>Analyse</b> = explain HOW language creates an effect. <b>Evaluate</b> = judge whether the writer succeeds.</span></div>
+<div class="card"><strong>⚡ Top Mark Tips</strong><br><span style="color:var(--muted);font-size:0.88rem;margin-top:6px;display:block;">• Embed short quotations — don't dump large blocks<br>• Always explain the EFFECT on the reader<br>• Refer to context in Literature (don't crowbar it)<br>• In Paper 2 non-fiction: distinguish clearly between text A and B<br>• Leave 5 minutes to re-read your writing answers</span></div>`
+  },
+
+  maths: {
+    label: 'Maths',
+    color: 'var(--math)',
+    topics: [
+      { id:'math_number', name:'Number', icon:'🔢', subtopics:['Integers & Place Value','Factors, Multiples, Primes','Powers & Roots','Fractions','Decimals','Percentages','Standard Form','Bounds & Estimation'] },
+      { id:'math_algebra', name:'Algebra', icon:'🔣', subtopics:['Simplifying Expressions','Expanding Brackets','Factorising','Solving Linear Equations','Inequalities','Sequences (nth Term)','Simultaneous Equations','Quadratics','Functions & Graphs'] },
+      { id:'math_ratio', name:'Ratio & Proportion', icon:'⚖️', subtopics:['Ratio Simplification','Dividing into Ratio','Proportion Problems','Direct & Inverse Proportion','Percentage Change','Reverse Percentage','Compound Interest'] },
+      { id:'math_geometry', name:'Geometry & Measures', icon:'📐', subtopics:['Angles','Polygons','Circles (area, circumference, sectors)','Pythagoras Theorem','Trigonometry','Transformations','Vectors','3D Shapes & Volume','Surface Area'] },
+      { id:'math_stats', name:'Statistics & Probability', icon:'📊', subtopics:['Mean, Median, Mode, Range','Frequency Tables','Cumulative Frequency','Box Plots','Histograms','Scatter Graphs','Probability Tree Diagrams','Venn Diagrams'] },
+      { id:'math_technique', name:'Exam Technique', icon:'📝', subtopics:['Show Your Working','Checking Methods','Problem-Solving Strategies','Timing Per Paper','Mark Allocation Clues','Common Calculation Errors'] }
+    ],
+    flashcards: [
+      { id:'math_fc_01', q:'What is the formula for the area of a circle?', a:'A = πr²  (π × radius squared)' },
+      { id:'math_fc_02', q:'What does "HCF" stand for and how do you find it?', a:'Highest Common Factor — the largest number that divides exactly into two numbers. Use prime factor trees.' },
+      { id:'math_fc_03', q:'State Pythagoras\' Theorem.', a:'a² + b² = c² where c is the hypotenuse (longest side) of a right-angled triangle.' },
+      { id:'math_fc_04', q:'What is a prime number?', a:'A number with exactly two factors: 1 and itself. E.g. 2, 3, 5, 7, 11, 13...' },
+      { id:'math_fc_05', q:'How do you find the nth term of an arithmetic sequence?', a:'nth term = dn + c, where d is the common difference and c is found by substituting n=1.' },
+      { id:'math_fc_06', q:'What is 15% of 240?', a:'240 × 0.15 = 36' },
+      { id:'math_fc_07', q:'What is standard form? Give an example.', a:'A × 10ⁿ where 1 ≤ A < 10. E.g. 3,400,000 = 3.4 × 10⁶' },
+      { id:'math_fc_08', q:'How do you solve simultaneous equations by elimination?', a:'Multiply equations to match a coefficient, then add or subtract to eliminate one variable. Solve for the other, then substitute back.' },
+      { id:'math_fc_09', q:'What is the formula for compound interest?', a:'A = P(1 + r/100)ⁿ where P=principal, r=rate %, n=number of years.' },
+      { id:'math_fc_10', q:'What is the circumference of a circle?', a:'C = 2πr or C = πd (diameter)' },
+      { id:'math_fc_11', q:'What is the gradient of a straight line?', a:'Gradient = rise ÷ run = (y₂ − y₁) ÷ (x₂ − x₁). It measures steepness and direction.' },
+      { id:'math_fc_12', q:'What are the three trigonometric ratios?', a:'sin θ = opposite/hypotenuse · cos θ = adjacent/hypotenuse · tan θ = opposite/adjacent. Remember: SOH CAH TOA.' },
+      { id:'math_fc_13', q:'How do you find the area of a trapezium?', a:'A = ½(a + b)h — half the sum of the parallel sides multiplied by the perpendicular height.' },
+      { id:'math_fc_14', q:'What is the difference between a factor and a multiple?', a:'Factor: divides into the number exactly. Multiple: the result of multiplying the number by an integer. Factors of 12: 1,2,3,4,6,12. Multiples of 3: 3,6,9,12...' },
+      { id:'math_fc_15', q:'What does "direct proportion" mean?', a:'As one quantity increases, the other increases at the same rate. y = kx. Doubling x doubles y.' },
+      { id:'math_fc_16', q:'How do you calculate percentage change?', a:'% change = (new − original) ÷ original × 100. Positive = increase. Negative = decrease.' },
+      { id:'math_fc_17', q:'What is a quadratic equation and how do you solve it?', a:'An equation with x² as the highest power. Solve by: factorising, completing the square, or the quadratic formula x = (−b ± √(b²−4ac)) / 2a.' },
+      { id:'math_fc_18', q:'What is the interior angle sum of a hexagon?', a:'(6 − 2) × 180° = 720°. Formula: (n − 2) × 180° for any polygon with n sides.' },
+      { id:'math_fc_19', q:'What is the probability of mutually exclusive events A or B?', a:'P(A or B) = P(A) + P(B). Mutually exclusive means they cannot both happen at the same time.' },
+      { id:'math_fc_20', q:'What does "inverse proportion" mean?', a:'As one quantity increases, the other decreases proportionally. y = k/x. Doubling x halves y.' }
+    ],
+    quiz: [
+      { q:'What is 2⁵?', options:['10','25','32','64'], answer:2 },
+      { q:'Simplify: 3x + 5 − x + 2', options:['4x + 3','2x + 7','2x + 3','4x + 7'], answer:1 },
+      { q:'What are the factors of 12?', options:['1,2,3,4,6,12','1,2,4,8,12','2,3,4,6','1,3,6,12'], answer:0 },
+      { q:'A right-angled triangle has sides 3cm and 4cm. What is the hypotenuse?', options:['5 cm','6 cm','7 cm','5.5 cm'], answer:0 },
+      { q:'What is the mean of: 4, 7, 9, 6, 4?', options:['5','6','6.5','7'], answer:1 },
+      { q:'Expand: 2(3x − 4)', options:['6x − 4','6x − 8','3x − 8','6x + 8'], answer:1 },
+      { q:'What is the angle sum inside a triangle?', options:['90°','180°','270°','360°'], answer:1 },
+      { q:'P(A)=0.3 for independent events. What is P(A and A)?', options:['0.6','0.09','0.3','0.06'], answer:1 },
+      { q:'What is the gradient of the line y = 3x − 7?', options:['-7','3','7','-3'], answer:1 },
+      { q:'Factorise: x² + 5x + 6', options:['(x+2)(x+3)','(x+1)(x+6)','(x−2)(x−3)','(x+3)(x+2)'], answer:0 },
+      { q:'What is 360 ÷ the number of sides for a regular polygon exterior angle?', options:['Interior angle','Exterior angle','Reflex angle','Central angle'], answer:1 },
+      { q:'Write 0.000045 in standard form.', options:['4.5 × 10⁻⁵','45 × 10⁻⁶','4.5 × 10⁵','0.45 × 10⁻⁴'], answer:0 },
+      { q:'Increase £80 by 15%.', options:['£88','£92','£95','£82'], answer:1 },
+      { q:'What is the median of: 3, 7, 2, 9, 5?', options:['5','7','3','6'], answer:0 },
+      { q:'Solve: 4x − 3 = 13', options:['x = 2.5','x = 4','x = 5','x = 3'], answer:1 },
+      { q:'What is sin 30°?', options:['1','0.5','√3/2','0'], answer:1 },
+      { q:'A bag has 3 red, 2 blue balls. P(red) =?', options:['3/5','2/5','3/2','1/2'], answer:0 },
+      { q:'What is the volume of a cylinder with r=4, h=10? (use π≈3.14)', options:['502.4','125.6','1256','251.2'], answer:0 },
+      { q:'What does the y-intercept represent in y = mx + c?', options:['The gradient','Where the line crosses the y-axis','The slope','The x-axis crossing'], answer:1 },
+      { q:'Solve the simultaneous equations: x + y = 10, x − y = 4', options:['x=7,y=3','x=6,y=4','x=8,y=2','x=5,y=5'], answer:0 }
+    ],
+    technique: `<h3 style="color:var(--math);margin-bottom:12px;">Maths Exam Technique</h3>
+<div class="card" style="margin-bottom:12px;"><strong>📋 The Golden Rule</strong><br><span style="color:var(--muted);font-size:0.88rem;margin-top:6px;display:block;"><b>ALWAYS show your working</b> — you can earn method marks even with a wrong final answer. A correct answer with no working risks zero marks on multi-step questions.</span></div>
+<div class="card" style="margin-bottom:12px;"><strong>⏱️ Timing</strong><br><span style="color:var(--muted);font-size:0.88rem;margin-top:6px;display:block;">AQA Higher/Foundation: 3 papers — 1hr 30min each. Aim for ~1 min per mark. Flag hard questions and return later. Don't spend 10 minutes on 2 marks.</span></div>
+<div class="card" style="margin-bottom:12px;"><strong>🔍 Reading the Question</strong><br><span style="color:var(--muted);font-size:0.88rem;margin-top:6px;display:block;"><b>Underline key data</b>. Look at how many marks. "Show that" = prove it with full working. "Estimate" = round to 1 significant figure. "Exact value" = leave π or √ in your answer.</span></div>
+<div class="card"><strong>⚡ Quick-Check Methods</strong><br><span style="color:var(--muted);font-size:0.88rem;margin-top:6px;display:block;">• Substitute answer back into equation to check<br>• Does the answer make physical sense?<br>• For percentages: 10% method to verify<br>• For geometry: angles should sum correctly<br>• Re-read the question after answering it</span></div>`
+  },
+
+  science: {
+    label: 'Science',
+    color: 'var(--sci)',
+    topics: [
+      { id:'sci_bio_cells', name:'Biology: Cells', icon:'🦠', subtopics:['Cell Structure (Animal vs Plant)','Organelles & Functions','Specialised Cells','Microscopy','Mitosis','Stem Cells','Diffusion, Osmosis, Active Transport'], chipClass:'chip-bio' },
+      { id:'sci_bio_organisation', name:'Biology: Organisation', icon:'❤️', subtopics:['Digestive System','Heart & Circulatory System','Lungs & Gas Exchange','Blood Components','Disease & Immunity','Monoclonal Antibodies'], chipClass:'chip-bio' },
+      { id:'sci_bio_genetics', name:'Biology: Genetics & Evolution', icon:'🧬', subtopics:['DNA Structure','Inheritance & Alleles','Punnett Squares','Genetic Disorders','Evolution by Natural Selection','Classification'], chipClass:'chip-bio' },
+      { id:'sci_chem_atomic', name:'Chemistry: Atomic Structure', icon:'⚛️', subtopics:['Sub-atomic Particles','Atomic Number & Mass Number','Isotopes','Electronic Configuration','Periodic Table History','Groups & Periods'], chipClass:'chip-chem' },
+      { id:'sci_chem_bonding', name:'Chemistry: Bonding', icon:'🔗', subtopics:['Ionic Bonding','Covalent Bonding','Metallic Bonding','Properties of Ionic Compounds','Simple vs Giant Covalent','Polymers'], chipClass:'chip-chem' },
+      { id:'sci_chem_reactions', name:'Chemistry: Reactions', icon:'⚗️', subtopics:['Exothermic & Endothermic','Rate of Reaction','Collision Theory','Reversible Reactions & Equilibrium','Electrolysis'], chipClass:'chip-chem' },
+      { id:'sci_phy_forces', name:'Physics: Forces & Motion', icon:'🏃', subtopics:['Speed, Velocity, Acceleration','Distance-Time Graphs','Velocity-Time Graphs','Newton\'s Laws','Weight vs Mass','Moments & Levers','Stopping Distance'], chipClass:'chip-phy' },
+      { id:'sci_phy_energy', name:'Physics: Energy', icon:'⚡', subtopics:['Energy Stores & Transfers','Specific Heat Capacity','Efficiency','Power','National Grid','Renewable vs Non-Renewable'], chipClass:'chip-phy' },
+      { id:'sci_phy_waves', name:'Physics: Waves', icon:'🌊', subtopics:['Wave Properties (λ,f,v)','Transverse vs Longitudinal','EM Spectrum','Reflection & Refraction','Sound Waves','Radiation & Absorption'], chipClass:'chip-phy' }
+    ],
+    flashcards: [
+      { id:'sci_fc_01', q:'What is the function of the mitochondria?', a:'The site of aerobic respiration — releases energy (ATP) from glucose for cell activities.' },
+      { id:'sci_fc_02', q:'What is osmosis?', a:'The net movement of water molecules from high to low water concentration through a partially permeable membrane.' },
+      { id:'sci_fc_03', q:'What is the equation for speed?', a:'Speed = Distance ÷ Time  (v = d/t). Units: m/s or km/h.' },
+      { id:'sci_fc_04', q:'What is the charge of a proton, neutron, and electron?', a:'Proton: +1, Neutron: 0, Electron: −1' },
+      { id:'sci_fc_05', q:'What is ionic bonding?', a:'The electrostatic attraction between oppositely charged ions, formed by transfer of electrons from a metal to a non-metal.' },
+      { id:'sci_fc_06', q:'What is natural selection?', a:'Organisms with favourable traits survive and reproduce more, passing on those traits — over time driving evolution.' },
+      { id:'sci_fc_07', q:'State the equation for kinetic energy.', a:'KE = ½mv²  (half × mass × velocity squared). Unit: joules (J).' },
+      { id:'sci_fc_08', q:'What is the difference between exothermic and endothermic?', a:'Exothermic: releases energy to surroundings (temperature rises). Endothermic: absorbs energy (temperature falls).' },
+      { id:'sci_fc_09', q:'What is the wave speed equation?', a:'Wave speed = frequency × wavelength  (v = f × λ). Units: m/s, Hz, m.' },
+      { id:'sci_fc_10', q:'Name the four blood components and their roles.', a:'Red blood cells (carry O₂), White blood cells (immunity), Platelets (clotting), Plasma (liquid transport medium).' },
+      { id:'sci_fc_11', q:'What is the difference between mitosis and meiosis?', a:'Mitosis: produces 2 identical diploid daughter cells (growth/repair). Meiosis: produces 4 genetically different haploid cells (gametes for reproduction).' },
+      { id:'sci_fc_12', q:'What is Newton\'s Second Law?', a:'Force = Mass × Acceleration  (F = ma). Unit of force: newtons (N).' },
+      { id:'sci_fc_13', q:'What is a covalent bond?', a:'The sharing of a pair of electrons between two non-metal atoms, forming a strong bond. E.g. H₂O, CO₂.' },
+      { id:'sci_fc_14', q:'What is the equation for photosynthesis?', a:'6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂  (using light energy and chlorophyll).' },
+      { id:'sci_fc_15', q:'What is the difference between a dominant and recessive allele?', a:'Dominant: expressed when at least one copy is present (represented by a capital letter). Recessive: only expressed when two copies are present (lower case).' },
+      { id:'sci_fc_16', q:'What is specific heat capacity?', a:'The energy required to raise the temperature of 1 kg of a substance by 1°C. Equation: Q = mcΔT.' },
+      { id:'sci_fc_17', q:'What is the equation for aerobic respiration?', a:'C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O + energy (ATP). Occurs in the mitochondria.' },
+      { id:'sci_fc_18', q:'What is an isotope?', a:'Atoms of the same element with the same number of protons but different numbers of neutrons. E.g. Carbon-12 and Carbon-14.' },
+      { id:'sci_fc_19', q:'What is the law of conservation of energy?', a:'Energy cannot be created or destroyed — only transferred from one store to another. Total energy before = total energy after.' },
+      { id:'sci_fc_20', q:'What is the difference between weight and mass?', a:'Mass (kg) is the amount of matter in an object — constant everywhere. Weight (N) is the gravitational force on an object — varies by location. W = mg.' }
+    ],
+    quiz: [
+      { q:'Which organelle is found in plant cells but NOT animal cells?', options:['Mitochondria','Cell wall','Nucleus','Cytoplasm'], answer:1 },
+      { q:'What does DNA stand for?', options:['Deoxyribose nucleic acid','Double nucleic acid','Di-nitrogen acid','Deoxyribonucleic acid'], answer:3 },
+      { q:'What is the atomic number of carbon?', options:['6','12','14','8'], answer:0 },
+      { q:'An object has mass 50kg. What is its weight on Earth? (g = 10 N/kg)', options:['5 N','500 N','50 N','0.5 N'], answer:1 },
+      { q:'Which energy transfer happens in a solar panel?', options:['Chemical → Electrical','Light → Electrical','Thermal → Light','Kinetic → Electrical'], answer:1 },
+      { q:'What is the name for a gene version with two identical alleles?', options:['Heterozygous','Dominant','Homozygous','Recessive'], answer:2 },
+      { q:'A covalent bond involves...', options:['Transfer of electrons','Sharing of electrons','Attraction of ions','Metallic lattice'], answer:1 },
+      { q:'On a velocity-time graph, what does the area under the line represent?', options:['Acceleration','Speed','Distance travelled','Force'], answer:2 },
+      { q:'What is the word equation for aerobic respiration?', options:['Glucose + Oxygen → Carbon dioxide + Water','Glucose → Lactic acid + Energy','Carbon dioxide + Water → Glucose + Oxygen','Glucose + Water → Oxygen + Carbon dioxide'], answer:0 },
+      { q:'Which part of the atom has no charge?', options:['Proton','Electron','Neutron','Nucleus'], answer:2 },
+      { q:'What happens to rate of reaction when temperature increases?', options:['Decreases','Stays the same','Increases','Doubles exactly'], answer:2 },
+      { q:'What is the unit of electrical resistance?', options:['Watts','Volts','Ohms','Amperes'], answer:2 },
+      { q:'A recessive disorder requires...', options:['One dominant allele','Two recessive alleles','One recessive allele','Three alleles'], answer:1 },
+      { q:'What type of radiation is stopped by a sheet of paper?', options:['Beta','Gamma','Alpha','X-rays'], answer:2 },
+      { q:'What is the product of the reaction between an acid and an alkali?', options:['An oxide','Salt and water','Carbon dioxide','Hydrogen gas'], answer:1 },
+      { q:'Which wave type requires a medium to travel through?', options:['Light','Radio waves','Sound','Gamma rays'], answer:2 },
+      { q:'What is the function of white blood cells?', options:['Carry oxygen','Produce insulin','Fight infection and disease','Clot blood'], answer:2 },
+      { q:'What is the formula for efficiency?', options:['Useful output ÷ Total input × 100%','Total input ÷ Useful output × 100%','Useful output × Total input','Total input − Useful output'], answer:0 },
+      { q:'In a food chain, what is the organism that makes its own food called?', options:['Consumer','Decomposer','Producer','Predator'], answer:2 },
+      { q:'What is an endothermic reaction? Give an example.', options:['Releases heat — combustion','Absorbs heat — thermal decomposition','Releases light — bioluminescence','Absorbs sound — resonance'], answer:1 }
+    ],
+    technique: `<h3 style="color:var(--sci);margin-bottom:12px;">Science Exam Technique</h3>
+<div class="card" style="margin-bottom:12px;"><strong>📋 Six-Mark Answer Structure</strong><br><span style="color:var(--muted);font-size:0.88rem;margin-top:6px;display:block;">For 6-mark "describe and explain" questions: write in clear paragraphs, include key terms, link cause to effect clearly, give examples/data where possible, and organise logically.</span></div>
+<div class="card" style="margin-bottom:12px;"><strong>🧮 Calculation Checklist</strong><br><span style="color:var(--muted);font-size:0.88rem;margin-top:6px;display:block;"><b>1.</b> Write the formula first. <b>2.</b> Substitute the values. <b>3.</b> Calculate. <b>4.</b> Write the unit. Missing units costs marks — always include them.</span></div>
+<div class="card" style="margin-bottom:12px;"><strong>📊 Interpreting Graphs & Data</strong><br><span style="color:var(--muted);font-size:0.88rem;margin-top:6px;display:block;">Always: describe the trend (increases, decreases, stays constant), use data from the graph ("at X, Y is Z"), then explain using science. Don't just say "it goes up".</span></div>
+<div class="card"><strong>⚡ Required Practicals</strong><br><span style="color:var(--muted);font-size:0.88rem;margin-top:6px;display:block;">These are ALWAYS tested. Know the method, variables (independent, dependent, controlled), equipment, and safety precautions for each one. Exam questions often give unfamiliar contexts — apply the same logic.</span></div>`
+  }
+};
+
+// ═══════════════════════════════════════════════════════
+// TIPS DATA
+// ═══════════════════════════════════════════════════════
+const TIPS = {
+  recall: [
+    { title: 'Active Recall over Re-reading', tip: 'Testing yourself is far more effective than reading notes again. Close the book and try to recall the key points before checking.' },
+    { title: 'Spaced Repetition', tip: 'Review topics at increasing intervals: 1 day later, then 3 days, then 1 week, then 2 weeks. The Planner automates this for you.' },
+    { title: 'Brain Dump', tip: 'Take a blank page and write down everything you know about a topic from memory. Then check what you missed.' },
+    { title: 'Teach It Out Loud', tip: 'Explaining a concept as if teaching someone else is one of the most powerful ways to find gaps in your understanding.' },
+    { title: 'Practice Under Exam Conditions', tip: 'Put your phone away, set a timer, use a past paper. The closer you simulate the exam, the better prepared you\'ll be.' }
+  ],
+  timing: [
+    { title: '1 Mark = 1 Minute (Maths)', tip: 'In Maths papers, roughly 1 minute per mark is your guide. If a question is worth 3 marks, don\'t spend 10 minutes on it.' },
+    { title: 'Stick to English Timing', tip: 'AQA English: spend roughly 15 minutes on each section 1 question and 45 minutes on section 2 writing. Plan before you write.' },
+    { title: 'Flag and Move On', tip: 'If stuck, circle the question, move on, and return later. Don\'t lose 5 minutes of marks elsewhere by dwelling on one problem.' },
+    { title: '5-Minute Buffer', tip: 'Leave 5 minutes at the end to re-read answers, check calculations, and fix obvious errors. This alone can add marks.' },
+    { title: 'Prioritise Easy Marks First', tip: 'In Science, secure the low-mark recall questions quickly before spending time on the 6-mark extended questions.' }
+  ],
+  answering: [
+    { title: 'Read the Whole Question', tip: 'Before writing, read every sentence of the question. Many students miss key information buried in the middle or end.' },
+    { title: 'Command Word is the Key', tip: '"Describe" = what happens. "Explain" = why it happens. "Evaluate" = judge it with evidence for and against. Get this wrong and you cannot get full marks.' },
+    { title: 'Mark Allocation Signals Depth', tip: 'A 1-mark question needs one clear point. A 6-mark question expects a developed, organised answer with multiple linked points.' },
+    { title: 'Use Specific Evidence', tip: 'In English: embed quotations. In Science: cite data. In Maths: show working. Never make an unsupported claim.' },
+    { title: 'Structure Before You Write', tip: 'On longer questions, spend 1–2 minutes planning your structure. A well-structured answer always outperforms an unplanned ramble.' }
+  ],
+  mistakes: [
+    { title: 'Don\'t Use Vague Language', tip: 'Avoid "this shows the character is sad". Say HOW the language creates that effect. "The word \'desolate\' implies total emptiness and loss, suggesting..."' },
+    { title: 'Forgetting Units in Science', tip: 'Missing units (m/s, J, kg, Pa) loses marks in every calculation question. Write the unit as part of every answer.' },
+    { title: 'No Working Shown in Maths', tip: 'A correct final answer with no working can score zero on a multi-step question. Method marks are available even for wrong answers.' },
+    { title: 'Context-Dumping in Literature', tip: 'Don\'t open every paragraph with a context fact. Link context to meaning: "Written in 1818, Shelley explores the hubris of rulers at a time when..."' },
+    { title: 'Ignoring the "Compare" Instruction', tip: 'If a question says "compare", explicitly write "In contrast..." or "Similarly..." to signal comparison, not just separate descriptions.' }
+  ],
+  confidence: [
+    { title: 'Progress is Invisible Until It Isn\'t', tip: 'You won\'t feel yourself improving day by day. But after two weeks of consistent effort, the difference is real and measurable.' },
+    { title: 'Struggle is How You Learn', tip: 'Feeling confused is a sign your brain is working, not failing. Persist through difficulty — understanding comes after the struggle.' },
+    { title: 'Every Past Paper is Practice, Not a Test', tip: 'Don\'t be discouraged by a low practice score. Every mistake you find before the exam is one you won\'t make in it.' },
+    { title: 'Compare Yourself to Yesterday', tip: 'The only meaningful comparison is whether you know more than you did last week. Use the Progress tracker to see real gains.' },
+    { title: 'Momentum Compounds', tip: 'Showing up for 20 minutes on a hard day is more valuable than 3 hours the day before the exam. Consistency beats cramming.' }
+  ],
+  examday: [
+    { title: 'Sleep Beats Late-Night Cramming', tip: 'Your brain consolidates memory during sleep. An extra hour of revision the night before is worth far less than 8 hours of sleep.' },
+    { title: 'Eat Before the Exam', tip: 'Your brain uses glucose. A proper meal 1–2 hours before the exam improves concentration significantly.' },
+    { title: 'Read the Paper First', tip: 'Spend 2–3 minutes reading through the whole paper before writing. This lets your brain start processing harder questions in the background.' },
+    { title: 'Don\'t Leave Questions Blank', tip: 'Even if unsure, attempt every question. Partial marks are available. A blank scores zero.' },
+    { title: 'Check Before Submitting', tip: 'In the final 5 minutes: re-read answers, check calculations, make sure your name is on the paper, and number all questions clearly.' }
+  ]
+};
+
+// ═══════════════════════════════════════════════════════
+// BADGES DATA
+// ═══════════════════════════════════════════════════════
+const BADGES = [
+  { id:'first_quiz', icon:'🎯', name:'First Shot', desc:'Complete your first quiz' },
+  { id:'streak3', icon:'🔥', name:'On Fire', desc:'3-day study streak' },
+  { id:'streak7', icon:'🌟', name:'Star Student', desc:'7-day study streak' },
+  { id:'streak30', icon:'💎', name:'Diamond Mind', desc:'30-day study streak' },
+  { id:'xp100', icon:'⚡', name:'Charged Up', desc:'Earn 100 XP' },
+  { id:'xp500', icon:'🚀', name:'Rocket Fuel', desc:'Earn 500 XP' },
+  { id:'xp1000', icon:'🏆', name:'Champion', desc:'Earn 1000 XP' },
+  { id:'all_english', icon:'📖', name:'Wordsmith', desc:'Cover all English topics' },
+  { id:'all_maths', icon:'🔢', name:'Numbers Mastered', desc:'Cover all Maths topics' },
+  { id:'all_science', icon:'🔬', name:'Scientist', desc:'Cover all Science topics' },
+  { id:'first_answer', icon:'✍️', name:'First Draft', desc:'Write your first answer' },
+  { id:'answers5', icon:'📝', name:'Essay Writer', desc:'Write 5 answers' },
+  { id:'perfect_quiz', icon:'💯', name:'Perfect Score', desc:'Get 100% in a quiz' },
+  { id:'planner_set', icon:'📅', name:'Planner Pro', desc:'Set up your revision plan' }
+];
+
+// ═══════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════
+function goTo(screenId) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  const screen = document.getElementById('screen-' + screenId);
+  if (screen) { screen.classList.add('active'); screen.querySelector('.fadein') && (screen.querySelector('.fadein').style.animation = 'none', setTimeout(() => screen.querySelector('.fadein').style.animation = '', 10)); }
+  const tab = [...document.querySelectorAll('.nav-tab')].find(t => t.textContent.toLowerCase().includes(screenId.toLowerCase()));
+  if (tab) tab.classList.add('active');
+  // Render content
+  if (screenId === 'dashboard') renderDashboard();
+  if (screenId === 'english') { renderSubjectContent('english'); setActiveNavTab('english'); }
+  if (screenId === 'maths') { renderSubjectContent('maths'); setActiveNavTab('maths'); }
+  if (screenId === 'science') { renderSubjectContent('science'); setActiveNavTab('science'); }
+  if (screenId === 'planner') renderPlanner();
+  if (screenId === 'progress') renderProgress();
+  if (screenId === 'rewards') renderRewards();
+  if (screenId === 'tips') { tipsTab('recall'); }
+  updateNavBadges();
+}
+
+function setActiveNavTab(name) {
+  document.querySelectorAll('.nav-tab').forEach(t => {
+    if (t.textContent.toLowerCase().trim() === name.toLowerCase()) t.classList.add('active');
+    else t.classList.remove('active');
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+// RENDER HELPERS
+// ═══════════════════════════════════════════════════════
+function updateNavBadges() {
+  document.getElementById('nav-streak').textContent = '🔥 ' + state.streak;
+  document.getElementById('nav-xp').textContent = '⚡ ' + state.xp + ' XP';
+}
+
+
+function renderDashboard() {
+  // Greeting
+  const hour = new Date().getHours();
+  const greet = hour < 12 ? 'Good morning! 👋' : hour < 18 ? 'Good afternoon! ☀️' : 'Good evening! 🌙';
+  document.getElementById('greeting').textContent = greet;
+
+  // Stats
+  document.getElementById('stat-streak').textContent = state.streak;
+  document.getElementById('stat-xp').textContent = state.xp;
+  const topicsDone = Object.values(state.topicProgress).filter(t => t.strength === 'strong').length;
+  document.getElementById('stat-topics').textContent = topicsDone;
+
+  // Countdown
+  if (state.plannerExamDate) {
+    const days = Math.ceil((new Date(state.plannerExamDate) - new Date()) / 86400000);
+    document.getElementById('days-left').textContent = days > 0 ? days : 'EXAM DAY!';
+  }
+
+  // Subject progress
+  const subjects = ['eng', 'math', 'sci'];
+  const topicCounts = { eng: SUBJECTS.english.topics.length, math: SUBJECTS.maths.topics.length, sci: SUBJECTS.science.topics.length };
+  const topicPrefixes = { eng: 'eng_', math: 'math_', sci: 'sci_' };
+  subjects.forEach(s => {
+    const done = Object.keys(state.topicProgress).filter(k => k.startsWith(topicPrefixes[s]) && state.topicProgress[k].strength !== 'weak').length;
+    const total = topicCounts[s];
+    const pct = Math.round(done / total * 100);
+    document.getElementById('prog-' + s).style.width = pct + '%';
+    document.getElementById('prog-' + s + '-label').textContent = pct + '% covered';
+  });
+
+  // SRS due count banner
+  const { dueCount: srsDue, newCount: srsNew } = getSrsSummary('random');
+  const totalDue = srsDue + srsNew;
+  const dueEl = document.getElementById('srs-due-banner');
+  if (dueEl) {
+    if (totalDue > 0) {
+      dueEl.innerHTML = `<div style="background:rgba(255,107,107,0.12);border:1px solid rgba(255,107,107,0.3);border-radius:10px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;flex-wrap:wrap;">
+        <span style="font-size:0.88rem;"><span style="font-weight:700;color:var(--eng);">${totalDue} flashcard${totalDue > 1 ? 's' : ''} due for review</span> — keep your streak going!</span>
+        <button class="btn btn-sm" style="background:var(--eng);color:#fff;flex-shrink:0;" onclick="fcSubj='random';fcContainer=document.getElementById('modal-box');fcCards=buildSessionQueue('random');fcIndex=0;fcFlipped=false;fcAgainCounts={};renderFlashcard();openModal()">Review Now</button>
+      </div>`;
+    } else {
+      dueEl.innerHTML = `<div style="background:rgba(0,230,118,0.08);border:1px solid rgba(0,230,118,0.2);border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:0.85rem;color:var(--green);">✅ No flashcards due right now — great work!</div>`;
+    }
+  }
+
+  // Today's focus
+  renderTodayFocus();
+
+  // Weak topics
+  renderWeakTopics();
+}
+
+function renderTodayFocus() {
+  const el = document.getElementById('today-focus');
+  if (!state.plannerExamDate) { el.innerHTML = '<p style="color:var(--muted);font-size:0.9rem;">Set your exam date in the <button class="btn btn-outline btn-sm" onclick="goTo(\'planner\')">Planner</button> to get a personalised daily schedule.</p>'; return; }
+  // Simple: recommend weakest topic
+  const weak = Object.entries(state.topicProgress).filter(([,v]) => v.strength === 'weak');
+  const allTopics = [...SUBJECTS.english.topics, ...SUBJECTS.maths.topics, ...SUBJECTS.science.topics];
+  if (weak.length) {
+    const [id] = weak[Math.floor(Math.random() * Math.min(3, weak.length))];
+    const t = allTopics.find(t => t.id === id);
+    el.innerHTML = `<div style="display:flex;align-items:center;gap:12px;"><div style="font-size:2rem;">${t?.icon || '📚'}</div><div><div style="font-weight:700;">${t?.name || id}</div><div style="font-size:0.82rem;color:var(--muted);">Flagged as weak — priority today</div></div><button class="btn btn-primary btn-sm" onclick="openLearnModal('${id}')">Start →</button></div>`;
+  } else {
+    const subject = ['english','maths','science'][new Date().getDay() % 3];
+    const topics = SUBJECTS[subject].topics;
+    const t = topics[Math.floor(Math.random() * topics.length)];
+    el.innerHTML = `<div style="display:flex;align-items:center;gap:12px;"><div style="font-size:2rem;">${t.icon}</div><div><div style="font-weight:700;">${t.name}</div><div style="font-size:0.82rem;color:var(--muted);">${subject.charAt(0).toUpperCase()+subject.slice(1)} — today's suggested topic</div></div><button class="btn btn-primary btn-sm" onclick="openLearnModal('${t.id}')">Start →</button></div>`;
+  }
+}
+
+function renderWeakTopics() {
+  const el = document.getElementById('weak-topics-list');
+  const allTopics = [...SUBJECTS.english.topics, ...SUBJECTS.maths.topics, ...SUBJECTS.science.topics];
+
+  // Weak topics (manual or auto-inferred)
+  const weak = allTopics
+    .filter(t => (state.topicProgress[t.id] || {}).strength === 'weak')
+    .slice(0, 3);
+
+  // Top missed questions
+  const missed = Object.values(state.wrongQuestions || {})
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 2);
+
+  let html = '';
+
+  if (weak.length) {
+    html += weak.map(t => `
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <div style="font-size:1.2rem;">${t.icon}</div>
+        <div style="flex:1;font-size:0.85rem;font-weight:600;">${t.name}</div>
+        <button class="btn btn-outline btn-sm" onclick="openLearnModal('${t.id}')">Review</button>
+      </div>`).join('');
+  }
+
+  if (missed.length) {
+    html += `<div style="margin-top:${weak.length ? 10 : 0}px;padding-top:${weak.length ? 10 : 0}px;${weak.length ? 'border-top:1px solid var(--border);' : ''}">
+      <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Most missed questions</div>
+      ${missed.map(w => `<div style="font-size:0.82rem;color:var(--eng);margin-bottom:6px;">
+        <span style="background:rgba(255,107,107,0.2);padding:1px 6px;border-radius:4px;font-size:0.72rem;margin-right:6px;">${w.count}×</span>${w.q.substring(0,70)}${w.q.length > 70 ? '…' : ''}
+      </div>`).join('')}
+    </div>`;
+  }
+
+  if (!html) {
+    el.innerHTML = '<p style="color:var(--muted);font-size:0.88rem;">No weak topics yet — complete some quizzes to map your knowledge.</p>';
+  } else {
+    el.innerHTML = html;
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// SUBJECT CONTENT RENDERER
+// ═══════════════════════════════════════════════════════
+function renderSubjectContent(subj) {
+  const tabMap = { english: 'topics', maths: 'topics', science: 'topics' };
+  const activeTab = tabMap[subj];
+  renderSubjTab(subj, activeTab);
+  // Reset tab buttons
+  document.querySelectorAll(`#${subj.substring(0,3)}-tabs .tab-btn, #${subj === 'english' ? 'eng' : subj === 'maths' ? 'math' : 'sci'}-tabs .tab-btn`).forEach(b => b.classList.remove('active'));
+  const tabs = document.getElementById((subj === 'english' ? 'eng' : subj === 'maths' ? 'math' : 'sci') + '-tabs');
+  if (tabs) tabs.querySelector('.tab-btn').classList.add('active');
+}
+
+function engTab(tab) { switchTab('eng', tab); renderSubjTab('english', tab); }
+function mathTab(tab) { switchTab('math', tab); renderSubjTab('maths', tab); }
+function sciTab(tab) { switchTab('sci', tab); renderSubjTab('science', tab); }
+
+function switchTab(prefix, tab) {
+  document.querySelectorAll(`#${prefix}-tabs .tab-btn`).forEach(b => b.classList.remove('active'));
+  const all = document.querySelectorAll(`#${prefix}-tabs .tab-btn`);
+  const tabNames = ['topics','flashcards','quiz','write','technique'];
+  const idx = tabNames.indexOf(tab);
+  if (all[idx]) all[idx].classList.add('active');
+}
+
+function renderSubjTab(subj, tab) {
+  const prefix = subj === 'english' ? 'eng' : subj === 'maths' ? 'math' : 'sci';
+  const container = document.getElementById(prefix + '-content');
+  const data = SUBJECTS[subj];
+
+  if (tab === 'topics') {
+    container.innerHTML = data.topics.map(t => {
+      const tp = state.topicProgress[t.id] || { strength: 'weak', score: 0 };
+      return `<div class="topic-row" onclick="openLearnModal('${t.id}')">
+        <div class="topic-icon">${t.icon}</div>
+        <div class="topic-info">
+          <div class="topic-name">${t.name}</div>
+          <div class="topic-sub">${t.subtopics.slice(0,3).join(' · ')}${t.subtopics.length > 3 ? '...' : ''}</div>
+        </div>
+        <span class="topic-strength strength-${tp.strength}">${tp.strength === 'weak' ? '⚠️ Weak' : tp.strength === 'ok' ? '👍 OK' : '✅ Strong'}</span>
+      </div>`;
+    }).join('');
+
+  } else if (tab === 'flashcards') {
+    const { dueCount, newCount, scheduledCount, total } = getSrsSummary(subj);
+    container.innerHTML = `<div class="fadein">
+      <div class="card card-accent" style="margin-bottom:16px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+          <div>
+            <h3 style="margin-bottom:6px;">🃏 Spaced Repetition</h3>
+            <p style="font-size:0.85rem;color:var(--muted);">Overdue cards first, then new cards. Rate each one to schedule the next review.</p>
+          </div>
+          <div style="display:flex;gap:10px;text-align:center;flex-wrap:wrap;">
+            <div style="background:rgba(255,107,107,0.15);border-radius:10px;padding:8px 14px;">
+              <div style="font-size:1.4rem;font-weight:900;color:var(--eng);">${dueCount}</div>
+              <div style="font-size:0.7rem;color:var(--muted);">Due</div>
+            </div>
+            <div style="background:rgba(124,92,252,0.15);border-radius:10px;padding:8px 14px;">
+              <div style="font-size:1.4rem;font-weight:900;color:var(--accent);">${Math.min(newCount, MAX_NEW_PER_SESSION)}</div>
+              <div style="font-size:0.7rem;color:var(--muted);">New today</div>
+            </div>
+            <div style="background:rgba(0,230,118,0.1);border-radius:10px;padding:8px 14px;">
+              <div style="font-size:1.4rem;font-weight:900;color:var(--green);">${scheduledCount}</div>
+              <div style="font-size:0.7rem;color:var(--muted);">Scheduled</div>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-full" style="margin-top:14px;"
+          onclick="launchFcSession('${subj}')">
+          Start Review Session →
+        </button>
+      </div>
+      <div id="fc-session-area"></div>
+    </div>`;
+    // Auto-launch if there's anything to review
+    if (dueCount > 0 || newCount > 0) {
+      setTimeout(() => launchFcSession(subj), 80);
+    }
+
+  } else if (tab === 'quiz') {
+    startQuiz(subj, container);
+
+  } else if (tab === 'write') {
+    renderWriteMode(subj, container);
+
+  } else if (tab === 'technique') {
+    container.innerHTML = `<div class="fadein">${data.technique}</div>`;
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// LEARN MODAL
+// ═══════════════════════════════════════════════════════
+function openLearnModal(topicId) {
+  let topic, subj;
+  for (const [s, d] of Object.entries(SUBJECTS)) {
+    const found = d.topics.find(t => t.id === topicId);
+    if (found) { topic = found; subj = s; break; }
+  }
+  if (!topic) return;
+
+  const box = document.getElementById('modal-box');
+  box.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:16px;">
+      <div><div style="font-size:2rem;">${topic.icon}</div><h2 style="margin-top:8px;">${topic.name}</h2></div>
+      <button class="btn btn-outline btn-sm" onclick="closeModal()">✕</button>
+    </div>
+    <p style="color:var(--muted);font-size:0.85rem;margin-bottom:16px;">Key subtopics to master:</p>
+    ${topic.subtopics.map(s => `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:0.9rem;"><span style="color:var(--accent);">→</span> ${s}</div>`).join('')}
+    <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="markTopic('${topicId}','strong');closeModal();toast('✅ Marked as strong! +20 XP');">✅ Mark Strong (+20 XP)</button>
+      <button class="btn btn-outline" onclick="markTopic('${topicId}','ok');closeModal();toast('👍 Marked as OK!');">👍 Mark OK</button>
+      <button class="btn btn-outline" onclick="closeModal()">Close</button>
+    </div>`;
+  openModal();
+}
+
+function markTopic(topicId, strength) {
+  state.topicProgress[topicId] = {
+    strength,
+    score: strength === 'strong' ? 90 : strength === 'ok' ? 60 : 20,
+    manualOverride: true
+  };
+  if (strength === 'strong') addXP(20);
+  updateStreak();
+  checkBadges();
+  saveState();
+  renderDashboard();
+}
+
+// ═══════════════════════════════════════════════════════
+// SPACED REPETITION ENGINE  (SM-2 variant)
+// Card record: { interval:days, ease:float, reps:int, due:ms, lastRating }
+// Ratings: 'easy' | 'hard' | 'again'
+// Queue strategy:
+//   1. Overdue cards (due <= now), hardest ease first
+//   2. New cards (reps === 0), up to MAX_NEW_PER_SESSION per session
+//   3. 'Again' cards recirculate at end of queue, capped to avoid infinite loops
+// ═══════════════════════════════════════════════════════
+const MAX_NEW_PER_SESSION = 10;
+const MAX_AGAIN_RECIRCULATIONS = 3; // stop showing 'again' cards after this many passes
+
+function getAllCards() {
+  const all = [];
+  for (const [, data] of Object.entries(SUBJECTS)) {
+    data.flashcards.forEach(c => all.push({ ...c }));
+  }
+  return all;
+}
+
+function getSrsRecord(cardId) {
+  // New cards: due is set to epoch 0 so they sort behind overdue but before future
+  return state.srsCards[cardId] || { interval: 1, ease: 2.5, reps: 0, due: 1, lastRating: null };
+}
+
+function updateSrs(cardId, rating) {
+  const rec = getSrsRecord(cardId);
+  const now = Date.now();
+  let { interval, ease, reps } = rec;
+
+  if (rating === 'again') {
+    // Reset: show again today, reduce ease slightly
+    interval = 1;
+    reps = 0;
+    ease = Math.max(1.3, ease - 0.2);
+  } else if (rating === 'hard') {
+    // Short interval — meaningful step even from reps=0
+    if (reps === 0) interval = 1;
+    else interval = Math.max(2, Math.round(interval * 1.3));
+    ease = Math.max(1.3, ease - 0.15);
+    reps++;
+  } else {
+    // Easy — standard SM-2 graduation
+    if (reps === 0) interval = 1;
+    else if (reps === 1) interval = 4;
+    else interval = Math.round(interval * ease);
+    ease = Math.min(3.0, ease + 0.1);
+    reps++;
+  }
+
+  const due = rating === 'again'
+    ? now + 10 * 60 * 1000        // 'again' → due in 10 min (same session)
+    : now + interval * 86400000;  // others  → days from now
+
+  state.srsCards[cardId] = { interval, ease, reps, due, lastRating: rating };
+  saveState();
+}
+
+function buildSessionQueue(subj) {
+  const now = Date.now();
+  const source = subj === 'random' ? getAllCards()
+    : (SUBJECTS[subj]?.flashcards || []);
+
+  const overdue = [];
+  const newCards = [];
+
+  source.forEach(c => {
+    const id = c.id || c.q;
+    const rec = getSrsRecord(id);
+    if (rec.reps === 0) {
+      newCards.push(c);
+    } else if (rec.due <= now) {
+      overdue.push(c);
+    }
+  });
+
+  // Sort overdue hardest first (lowest ease = hardest)
+  overdue.sort((a, b) => getSrsRecord(a.id || a.q).ease - getSrsRecord(b.id || b.q).ease);
+
+  // Cap new cards per session
+  const newBatch = newCards.slice(0, MAX_NEW_PER_SESSION);
+
+  return [...overdue, ...newBatch];
+}
+
+function srsStatusLabel(cardId) {
+  const rec = getSrsRecord(cardId);
+  const now = Date.now();
+  if (rec.reps === 0) return { label: 'New', color: 'var(--muted)' };
+  if (rec.due <= now) return { label: 'Due now', color: 'var(--eng)' };
+  const daysLeft = Math.ceil((rec.due - now) / 86400000);
+  if (daysLeft <= 1) return { label: 'Due tomorrow', color: 'var(--sci)' };
+  return { label: `Due in ${daysLeft}d`, color: 'var(--green)' };
+}
+
+function getSrsSummary(subj) {
+  const now = Date.now();
+  const source = subj === 'random' ? getAllCards() : (SUBJECTS[subj]?.flashcards || []);
+  let dueCount = 0, newCount = 0, scheduledCount = 0;
+  source.forEach(c => {
+    const rec = getSrsRecord(c.id || c.q);
+    if (rec.reps === 0) newCount++;
+    else if (rec.due <= now) dueCount++;
+    else scheduledCount++;
+  });
+  return { dueCount, newCount, scheduledCount, total: source.length };
+}
+
+// ── FLASHCARD UI ──────────────────────────────────────
+let fcCards = [], fcIndex = 0, fcSubj = '', fcContainer = null, fcFlipped = false;
+// Track recirculation count per card to prevent infinite 'again' loops
+let fcAgainCounts = {};
+
+function launchFcSession(subj) {
+  // Resolve container: for subject tabs the session area is inside the tab content
+  const prefix = subj === 'english' ? 'eng' : subj === 'maths' ? 'math' : 'sci';
+  const subjArea = document.getElementById(prefix + '-content');
+  const sessionArea = subjArea ? subjArea.querySelector('#fc-session-area') : null;
+
+  fcSubj = subj;
+  fcContainer = (subj === 'random')
+    ? document.getElementById('modal-box')
+    : (sessionArea || document.getElementById('modal-box'));
+
+  if (!fcContainer) return;
+
+  fcCards = buildSessionQueue(subj);
+  fcIndex = 0;
+  fcFlipped = false;
+  fcAgainCounts = {};
+  renderFlashcard();
+}
+
+function renderFlashcard() {
+  if (!fcContainer) return;
+
+  if (!fcCards.length) {
+    const closeBtn = fcSubj === 'random'
+      ? '<button class="btn btn-outline" onclick="closeModal()">Close</button>' : '';
+    fcContainer.innerHTML = `
+      <div style="text-align:center;padding:28px 16px;" class="fadein">
+        <div style="font-size:3rem;margin-bottom:12px;">🎉</div>
+        <h3 style="margin-bottom:8px;">Session complete!</h3>
+        <p style="color:var(--muted);font-size:0.88rem;margin-bottom:20px;">
+          All due cards reviewed. Come back tomorrow for the next round.
+        </p>
+        ${closeBtn}
+      </div>`;
+    return;
+  }
+
+  // Guard: if fcIndex is out of range, reset
+  if (fcIndex >= fcCards.length) fcIndex = 0;
+
+  const card = fcCards[fcIndex];
+  const cardId = card.id || card.q;
+  const { label, color } = srsStatusLabel(cardId);
+  const rec = getSrsRecord(cardId);
+  const remaining = fcCards.length;
+  const subjectLabel = card.subj
+    ? `<span class="chip chip-${card.subj === 'english' ? 'eng' : card.subj === 'maths' ? 'math' : 'sci'}" style="font-size:0.65rem;">${card.subj}</span>`
+    : '';
+
+  // Next interval preview strings
+  const now = Date.now();
+  const previewAgain = '~10min';
+  const previewHard = rec.reps === 0 ? '1d' : Math.max(2, Math.round((rec.interval||1) * 1.3)) + 'd';
+  const previewEasy = rec.reps === 0 ? '1d' : rec.reps === 1 ? '4d' : Math.round((rec.interval||1) * rec.ease) + 'd';
+
+  const closeBtn = fcSubj === 'random'
+    ? '<button class="btn btn-outline btn-sm" onclick="closeModal()">✕</button>' : '';
+
+  fcContainer.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:0.78rem;color:var(--muted);">${fcIndex + 1} of ${remaining} remaining</span>
+        ${subjectLabel}
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="padding:2px 8px;border-radius:20px;background:rgba(0,0,0,0.3);color:${color};font-size:0.7rem;font-weight:700;">${label}</span>
+        ${closeBtn}
+      </div>
+    </div>
+
+    <div class="flashcard" id="fc-card" onclick="fcFlipCard()" style="cursor:pointer;">
+      <div id="fc-front" style="font-size:1rem;font-weight:700;line-height:1.6;text-align:center;padding:0 8px;">${card.q}</div>
+      <div id="fc-back" style="display:none;font-size:0.92rem;line-height:1.65;text-align:center;padding:0 8px;">${card.a}</div>
+      <div id="fc-hint" style="position:absolute;bottom:10px;width:100%;text-align:center;font-size:0.68rem;color:var(--muted);">Tap to reveal answer</div>
+    </div>
+
+    <div id="fc-rating-btns" style="display:none;margin-top:16px;">
+      <div style="font-size:0.75rem;color:var(--muted);text-align:center;margin-bottom:10px;letter-spacing:0.3px;">How well did you know this?</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+        <button onclick="rateCard('again')" style="background:rgba(255,107,107,0.18);color:var(--eng);border:1.5px solid rgba(255,107,107,0.5);border-radius:10px;padding:10px 6px;cursor:pointer;font-family:'Outfit',sans-serif;text-align:center;">
+          <div style="font-size:1.1rem;">🔄</div>
+          <div style="font-weight:700;font-size:0.82rem;margin-top:3px;">Again</div>
+          <div style="font-size:0.68rem;color:var(--muted);margin-top:2px;">${previewAgain}</div>
+        </button>
+        <button onclick="rateCard('hard')" style="background:rgba(255,230,109,0.15);color:var(--sci);border:1.5px solid rgba(255,230,109,0.4);border-radius:10px;padding:10px 6px;cursor:pointer;font-family:'Outfit',sans-serif;text-align:center;">
+          <div style="font-size:1.1rem;">😓</div>
+          <div style="font-weight:700;font-size:0.82rem;margin-top:3px;">Hard</div>
+          <div style="font-size:0.68rem;color:var(--muted);margin-top:2px;">${previewHard}</div>
+        </button>
+        <button onclick="rateCard('easy')" style="background:rgba(0,230,118,0.12);color:var(--green);border:1.5px solid rgba(0,230,118,0.4);border-radius:10px;padding:10px 6px;cursor:pointer;font-family:'Outfit',sans-serif;text-align:center;">
+          <div style="font-size:1.1rem;">✅</div>
+          <div style="font-weight:700;font-size:0.82rem;margin-top:3px;">Easy</div>
+          <div style="font-size:0.68rem;color:var(--muted);margin-top:2px;">${previewEasy}</div>
+        </button>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:center;gap:10px;margin-top:10px;">
+      <button class="btn btn-outline btn-sm" onclick="fcSkip()">Skip →</button>
+    </div>
+    <div style="text-align:center;margin-top:8px;">
+      <span style="font-size:0.68rem;color:var(--muted);">
+        ${rec.reps === 0 ? 'New card' : `Seen ${rec.reps}× · Interval ${rec.interval}d`} · Ease ${rec.ease.toFixed(1)}
+      </span>
+    </div>`;
+  fcFlipped = false;
+}
+
+function fcFlipCard() {
+  if (fcFlipped) return;
+  fcFlipped = true;
+  const front = document.getElementById('fc-front');
+  const back  = document.getElementById('fc-back');
+  const hint  = document.getElementById('fc-hint');
+  const btns  = document.getElementById('fc-rating-btns');
+  if (front) front.style.display = 'none';
+  if (back)  back.style.display  = 'block';
+  if (hint)  hint.style.display  = 'none';
+  if (btns)  btns.style.display  = 'block';
+  addXP(1);
+  saveState();
+}
+
+function rateCard(rating) {
+  if (!fcCards.length) return;
+
+  const card = fcCards[fcIndex];
+  const cardId = card.id || card.q;
+  updateSrs(cardId, rating);
+  updateStreak();
+  checkBadges();
+
+  const xpMap = { easy: 5, hard: 3, again: 1 };
+  addXP(xpMap[rating]);
+
+  if (rating === 'again') {
+    // Track how many times this card has recirculated
+    fcAgainCounts[cardId] = (fcAgainCounts[cardId] || 0) + 1;
+    fcCards.splice(fcIndex, 1);
+
+    if (fcAgainCounts[cardId] <= MAX_AGAIN_RECIRCULATIONS) {
+      // Re-insert near the end (not at the very end so user doesn't have to wait long)
+      const insertAt = Math.min(fcCards.length, fcIndex + 3);
+      fcCards.splice(insertAt, 0, card);
+      // fcIndex stays the same — points to next card naturally
+    }
+    // If exceeded recirculation limit, card drops out of this session
+    if (fcIndex >= fcCards.length) fcIndex = Math.max(0, fcCards.length - 1);
+  } else {
+    // Rated hard or easy — remove from queue
+    fcCards.splice(fcIndex, 1);
+    if (fcIndex >= fcCards.length) fcIndex = Math.max(0, fcCards.length - 1);
+  }
+
+  renderFlashcard();
+}
+
+function fcSkip() {
+  if (!fcCards.length) return;
+  fcIndex = (fcIndex + 1) % fcCards.length;
+  renderFlashcard();
+}
+
+// ═══════════════════════════════════════════════════════
+// QUIZ ENGINE
+// ═══════════════════════════════════════════════════════
+let quizData = [], quizIndex = 0, quizScore = 0, quizContainer = null, quizSubj = '';
+
+function startQuiz(subj, container) {
+  quizSubj = subj;
+  const pool = subj === 'random'
+    ? [...SUBJECTS.english.quiz, ...SUBJECTS.maths.quiz, ...SUBJECTS.science.quiz]
+    : (SUBJECTS[subj]?.quiz || []);
+  // Always shuffle so each session differs
+  quizData = pool.slice().sort(() => Math.random() - 0.5);
+  if (subj === 'random') quizData = quizData.slice(0, 10);
+  quizIndex = 0; quizScore = 0;
+  quizContainer = container;
+  renderQuestion();
+}
+
+function startQuickQuiz() {
+  const box = document.getElementById('modal-box');
+  quizContainer = box;
+  startQuiz('random', box);
+  openModal();
+}
+
+function renderQuestion() {
+  if (quizIndex >= quizData.length) {
+    showQuizResult();
+    return;
+  }
+  const q = quizData[quizIndex];
+  const pct = Math.round((quizIndex / quizData.length) * 100);
+  quizContainer.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <span style="font-size:0.8rem;color:var(--muted);">Question ${quizIndex + 1} of ${quizData.length}</span>
+      <span style="font-size:0.8rem;color:var(--accent);font-weight:700;">Score: ${quizScore}</span>
+      ${quizSubj === 'random' ? '<button class="btn btn-outline btn-sm" onclick="closeModal()">✕</button>' : ''}
+    </div>
+    <div class="progress-bar" style="margin-bottom:16px;"><div class="progress-fill" style="background:var(--accent);width:${pct}%;"></div></div>
+    <div style="font-weight:700;font-size:1rem;margin-bottom:16px;line-height:1.5;">${q.q}</div>
+    ${q.options.map((o, i) => `<div class="quiz-option" onclick="answerQuiz(${i})">${String.fromCharCode(65+i)}. ${o}</div>`).join('')}`;
+}
+
+function answerQuiz(selected) {
+  const q = quizData[quizIndex];
+  const options = quizContainer.querySelectorAll('.quiz-option');
+  options.forEach(o => o.classList.add('locked'));
+  options[q.answer].classList.add('correct');
+
+  const correct = selected === q.answer;
+  if (!correct) {
+    options[selected].classList.add('wrong');
+    // Track wrong question
+    const key = q.q.substring(0, 60);
+    if (!state.wrongQuestions) state.wrongQuestions = {};
+    state.wrongQuestions[key] = {
+      count: ((state.wrongQuestions[key] || {}).count || 0) + 1,
+      subj: quizSubj,
+      q: q.q,
+      last: Date.now()
+    };
+  } else {
+    quizScore++;
+    addXP(10);
+  }
+
+  state.quizTotal++;
+  if (correct) state.quizCorrect++;
+
+  // Update per-topic quiz stats if we're in a subject quiz
+  if (quizSubj !== 'random') {
+    const tp = state.topicProgress[`${quizSubj}_quiz`] || { quizCorrect: 0, quizTotal: 0 };
+    tp.quizCorrect = (tp.quizCorrect || 0) + (correct ? 1 : 0);
+    tp.quizTotal = (tp.quizTotal || 0) + 1;
+    state.topicProgress[`${quizSubj}_quiz`] = tp;
+  }
+
+  saveState();
+  setTimeout(() => { quizIndex++; renderQuestion(); }, 900);
+}
+
+// Derive topic strength from quiz performance and update topic + SRS nudge
+function inferTopicStrength(subj) {
+  const key = `${subj}_quiz`;
+  const tp = state.topicProgress[key] || {};
+  const total = tp.quizTotal || 0;
+  if (total < 4) return; // not enough data yet
+
+  const pct = Math.round((tp.quizCorrect || 0) / total * 100);
+  const strength = pct >= 80 ? 'strong' : pct >= 55 ? 'ok' : 'weak';
+
+  // Apply to all topics in that subject that haven't been manually set to strong
+  SUBJECTS[subj]?.topics.forEach(t => {
+    const existing = state.topicProgress[t.id] || {};
+    // Only auto-update if not manually marked strong (respect human override)
+    if (existing.manualOverride) return;
+    state.topicProgress[t.id] = {
+      ...existing,
+      strength,
+      score: pct,
+      autoInferred: true
+    };
+  });
+
+  // Cross-pollinate into SRS: if weak, reset ease on that subject's cards slightly
+  if (strength === 'weak') {
+    SUBJECTS[subj]?.flashcards.forEach(c => {
+      const id = c.id || c.q;
+      const rec = state.srsCards[id];
+      if (rec && rec.ease > 1.8) {
+        state.srsCards[id] = { ...rec, ease: Math.max(1.5, rec.ease - 0.3) };
+      }
+    });
+  }
+
+  saveState();
+}
+
+function showQuizResult() {
+  state.quizzesDone++;
+  updateStreak();
+  const pct = Math.round(quizScore / quizData.length * 100);
+  if (pct === 100) awardBadge('perfect_quiz');
+  if (state.quizzesDone === 1) awardBadge('first_quiz');
+
+  // Auto-infer topic strength from quiz performance
+  if (quizSubj !== 'random') {
+    inferTopicStrength(quizSubj);
+  } else {
+    // For random quiz, infer for all subjects that have enough data
+    ['english','maths','science'].forEach(inferTopicStrength);
+  }
+
+  checkBadges();
+  saveState();
+
+  const colour = pct >= 80 ? 'var(--green)' : pct >= 60 ? 'var(--sci)' : 'var(--eng)';
+  const msg = pct >= 80 ? '🎉 Excellent work!' : pct >= 60 ? '👍 Good effort — keep going!' : '💪 More practice needed — you\'ve got this!';
+  quizContainer.innerHTML = `
+    <div style="text-align:center;padding:20px 0;">
+      <div style="font-size:3rem;font-weight:900;color:${colour};font-family:'Space Mono',monospace;" class="pop">${pct}%</div>
+      <div style="font-size:1.1rem;font-weight:700;margin:12px 0;">${quizScore} / ${quizData.length} correct</div>
+      <p style="color:var(--muted);margin-bottom:20px;">${msg}</p>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="startQuiz(quizSubj, quizContainer)">Retry Quiz</button>
+        ${quizSubj === 'random' ? '<button class="btn btn-outline" onclick="closeModal()">Close</button>' : ''}
+      </div>
+    </div>`;
+  renderProgress();
+}
+
+// ═══════════════════════════════════════════════════════
+// WRITE & MARK MODE (AI-powered)
+// ═══════════════════════════════════════════════════════
+const WRITE_PROMPTS = {
+  english: [
+    { id:'en_q1', prompt: 'How does the writer use language to describe the storm? [AQA Paper 1, Q2 — 8 marks]', context: 'The wind tore across the hillside, scattering leaves like confetti. The trees groaned under its fury, their branches clawing desperately at the bruised sky. She stood against it, hair wild, coat snapping — a defiant figure against the grey chaos of the world.' },
+    { id:'en_q2', prompt: 'Write about a time you felt proud of yourself. [AQA Paper 1, Q5 — Descriptive Writing — 40 marks]', context: '' },
+    { id:'en_q3', prompt: '"Macbeth is entirely responsible for his own downfall." How far do you agree? [AQA Literature — 30 marks]', context: '' },
+    { id:'en_q4', prompt: 'Compare how the poets present power in "Ozymandias" and one other poem from Power and Conflict. [AQA Literature — 30 marks]', context: '' },
+    { id:'en_q5', prompt: 'How does Stevenson present the theme of duality in "Strange Case of Dr Jekyll and Mr Hyde"? [AQA Literature — 30 marks]', context: '' },
+    { id:'en_q6', prompt: 'Read Source A. How does the writer structure the text to interest the reader? [AQA Paper 1, Q3 — 8 marks]', context: 'The first thing she noticed was the silence. Then, slowly, the darkness. She pressed herself against the cold wall, counting her breaths — one, two, three. Behind her, something moved. At first it was nothing, just the settling of an old house. Then it came again: a step, deliberate and slow, on the stair above.' },
+    { id:'en_q7', prompt: '"This text is highly effective in persuading the reader." To what extent do you agree? [AQA Paper 2, Q4 — 20 marks]', context: 'Every year, millions of young people are failed by a school system that prizes memorisation over imagination. We teach children to pass tests, not to think. We reward silence and compliance, not curiosity or creativity. Is it any wonder, then, that so many leave school with certificates but no confidence, qualifications but no direction?' }
+  ],
+  maths: [
+    { id:'ma_q1', prompt: 'A car travels 240 km in 3 hours. (a) What is its average speed? (b) It increases speed by 20%. What is the new speed? Show all working. [5 marks]', context: '' },
+    { id:'ma_q2', prompt: 'Expand and simplify: (x + 3)(x − 5). Then solve x² − 2x − 15 = 0. Show your method. [5 marks]', context: '' },
+    { id:'ma_q3', prompt: 'The probability of rain on any day is 0.3. Draw a probability tree for two consecutive days and find P(rain on at least one day). [5 marks]', context: '' },
+    { id:'ma_q4', prompt: 'A cylinder has radius 5 cm and height 12 cm. Calculate its volume and total surface area. Give answers to 3 significant figures. [6 marks]', context: '' },
+    { id:'ma_q5', prompt: 'Solve the simultaneous equations: 3x + 2y = 16 and x − y = 2. Show full algebraic working. [4 marks]', context: '' },
+    { id:'ma_q6', prompt: 'The nth term of a sequence is 4n − 1. (a) Write the first four terms. (b) Is 75 a term in the sequence? Prove your answer. [4 marks]', context: '' },
+    { id:'ma_q7', prompt: 'A shopkeeper buys a jacket for £48 and sells it for £66. (a) Calculate the percentage profit. (b) He then discounts the selling price by 15%. What is the final price? [5 marks]', context: '' }
+  ],
+  science: [
+    { id:'sc_q1', prompt: 'Describe and explain how the heart pumps blood around the body. Include the role of valves. [6 marks]', context: '' },
+    { id:'sc_q2', prompt: 'Explain why ionic compounds have high melting points. [4 marks]', context: '' },
+    { id:'sc_q3', prompt: 'A cyclist accelerates from rest to 12 m/s in 8 seconds. (a) Calculate the acceleration. (b) Calculate the kinetic energy at top speed if mass = 70 kg. [4 marks]', context: '' },
+    { id:'sc_q4', prompt: 'Describe the process of natural selection and explain how it can lead to a new species over time. [6 marks]', context: '' },
+    { id:'sc_q5', prompt: 'A student investigates the effect of temperature on the rate of a reaction between hydrochloric acid and marble chips. Describe the method, variables, and expected results. [6 marks]', context: '' },
+    { id:'sc_q6', prompt: 'Explain the differences between aerobic and anaerobic respiration. Include word equations for each. [5 marks]', context: '' },
+    { id:'sc_q7', prompt: 'A wire has resistance 12 Ω and a current of 2 A flowing through it. (a) Calculate the voltage across the wire. (b) Calculate the power dissipated. [4 marks]', context: '' }
+  ]
+};
+
+let currentWritePrompt = null, currentWriteSubj = '';
+
+function renderWriteMode(subj, container) {
+  currentWriteSubj = subj;
+  const prompts = WRITE_PROMPTS[subj];
+  container.innerHTML = `
+    <div class="fadein">
+      <h3 style="margin-bottom:12px;">✍️ Practice Questions</h3>
+      ${prompts.map((p, i) => `
+        <div class="card" style="margin-bottom:12px;cursor:pointer;" onclick="selectWritePrompt('${p.id}', '${subj}')">
+          <div style="display:flex;justify-content:space-between;align-items:start;gap:12px;">
+            <div><div style="font-weight:700;font-size:0.88rem;margin-bottom:6px;">Question ${i+1}</div>
+            <div style="font-size:0.85rem;color:var(--muted);line-height:1.5;">${p.prompt.substring(0, 100)}...</div></div>
+            <button class="btn btn-primary btn-sm" style="flex-shrink:0;">Attempt →</button>
+          </div>
+        </div>`).join('')}
+      <div id="write-workspace" style="display:none;margin-top:16px;">
+        <div class="card card-accent" style="margin-bottom:14px;">
+          <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Question</div>
+          <div id="write-q-text" style="font-size:0.9rem;line-height:1.6;font-weight:600;"></div>
+          <div id="write-extract" style="margin-top:10px;padding:12px;background:var(--surface);border-radius:8px;font-size:0.85rem;line-height:1.6;color:var(--muted);display:none;font-style:italic;"></div>
+        </div>
+        <div style="margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;">
+          <div style="font-size:0.8rem;color:var(--muted);">Write your answer below:</div>
+          <div id="write-timer" style="font-family:'Space Mono',monospace;font-size:0.9rem;color:var(--accent);"></div>
+        </div>
+        <textarea id="answer-area" placeholder="Start writing here..."></textarea>
+        <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;">
+          <button class="btn btn-primary" onclick="submitAnswer()">📤 Submit for AI Marking</button>
+          <button class="btn btn-outline" onclick="exportAnswer()">📋 Copy Answer</button>
+          <button class="btn btn-outline" onclick="emailAnswer()">📧 Email to Tutor</button>
+          <button class="btn btn-outline btn-sm" onclick="document.getElementById('write-workspace').style.display='none'">Back</button>
+        </div>
+        <div id="feedback-area" style="margin-top:16px;"></div>
+      </div>
+    </div>`;
+}
+
+let writeTimerInterval = null;
+
+function selectWritePrompt(promptId, subj) {
+  const prompts = WRITE_PROMPTS[subj];
+  const p = prompts.find(q => q.id === promptId);
+  if (!p) return;
+  currentWritePrompt = p;
+  document.getElementById('write-workspace').style.display = 'block';
+  document.getElementById('write-q-text').textContent = p.prompt;
+  document.getElementById('answer-area').value = '';
+  document.getElementById('feedback-area').innerHTML = '';
+  if (p.context) {
+    const ext = document.getElementById('write-extract');
+    ext.textContent = p.context;
+    ext.style.display = 'block';
+  } else {
+    document.getElementById('write-extract').style.display = 'none';
+  }
+  document.getElementById('write-workspace').scrollIntoView({ behavior: 'smooth' });
+
+  // Start timer — derive suggested time from marks in prompt
+  const marksMatch = p.prompt.match(/(\d+)\s*marks?/i);
+  const suggestedMins = marksMatch ? Math.max(5, parseInt(marksMatch[1])) : 20;
+  startWriteTimer(suggestedMins * 60);
+}
+
+function startWriteTimer(totalSeconds) {
+  clearInterval(writeTimerInterval);
+  let remaining = totalSeconds;
+  const el = document.getElementById('write-timer');
+  if (!el) return;
+
+  function tick() {
+    if (remaining <= 0) {
+      clearInterval(writeTimerInterval);
+      if (el) el.innerHTML = `<span style="color:var(--eng);">⏱ Time's up!</span>`;
+      return;
+    }
+    const m = Math.floor(remaining / 60);
+    const s = remaining % 60;
+    const colour = remaining <= 120 ? 'var(--eng)' : remaining <= 300 ? 'var(--sci)' : 'var(--accent)';
+    if (el) el.innerHTML = `<span style="color:${colour};">⏱ ${m}:${String(s).padStart(2,'0')}</span>`;
+    remaining--;
+  }
+  tick();
+  writeTimerInterval = setInterval(tick, 1000);
+}
+
+async function submitAnswer() {
+  const answer = document.getElementById('answer-area').value.trim();
+  if (!answer || answer.length < 20) { toast('Please write a fuller answer before submitting.'); return; }
+
+  const fb = document.getElementById('feedback-area');
+  fb.innerHTML = `<div class="card" style="text-align:center;padding:24px;"><div class="pulsing" style="font-size:1.5rem;">🤖</div><p style="color:var(--muted);margin-top:8px;">AI marking in progress...</p></div>`;
+
+  const subjectGuide = {
+    english: 'AQA GCSE English Language or Literature examiner',
+    maths: 'AQA GCSE Mathematics examiner',
+    science: 'AQA GCSE Combined Science or Triple Science examiner'
+  };
+
+  const systemPrompt = `You are an experienced ${subjectGuide[currentWriteSubj] || 'GCSE examiner'} marking a student's answer. Give structured, specific feedback in this exact format:
+
+**GRADE BAND:** [e.g. Grade 5-6]
+**MARKS AWARDED:** [e.g. 5/8]
+
+**STRENGTHS:**
+- [specific strength 1]
+- [specific strength 2]
+
+**WEAKNESSES & OMISSIONS:**
+- [specific weakness 1]
+- [specific weakness 2]
+
+**HOW TO IMPROVE:**
+- [specific actionable step 1]
+- [specific actionable step 2]
+
+**EXAMINER COMMENT:**
+[1-2 sentence overall comment with encouragement]
+
+Be honest, constructive, and exam-focused. Use UK English. Keep each bullet point concise and actionable.`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: systemPrompt,
+        messages: [{
+          role: 'user',
+          content: `Question: ${currentWritePrompt.prompt}\n\n${currentWritePrompt.context ? 'Extract: ' + currentWritePrompt.context + '\n\n' : ''}Student answer:\n${answer}`
+        }]
+      })
+    });
+    const data = await response.json();
+    const text = data.content?.[0]?.text || 'Could not retrieve feedback.';
+
+    state.answersWritten++;
+    if (state.answersWritten === 1) awardBadge('first_answer');
+    if (state.answersWritten >= 5) awardBadge('answers5');
+    addXP(25);
+    updateStreak();
+    checkBadges();
+    saveState();
+
+    fb.innerHTML = `<div class="card fadein ai-feedback">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+        <span style="font-size:1.5rem;">🤖</span>
+        <div><div style="font-weight:800;">AI Examiner Feedback</div><div style="font-size:0.75rem;color:var(--muted);">+25 XP earned</div></div>
+      </div>
+      ${formatFeedback(text)}
+    </div>`;
+  } catch (err) {
+    fb.innerHTML = `<div class="card"><p style="color:var(--eng);">⚠️ Could not connect to AI marking. Check your internet connection.</p><pre style="font-size:0.7rem;color:var(--muted);margin-top:8px;">${err.message}</pre></div>`;
+  }
+}
+
+function formatFeedback(text) {
+  // Process line by line to avoid regex conflicts between bold/list/paragraph
+  const lines = text.split('\n');
+  let html = '';
+  let inList = false;
+
+  for (let raw of lines) {
+    const line = raw.trim();
+    if (!line) {
+      if (inList) { html += '</ul>'; inList = false; }
+      continue;
+    }
+    // Bold inline: **text**
+    const inlined = line.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+
+    if (inlined.startsWith('- ') || inlined.startsWith('• ')) {
+      if (!inList) { html += '<ul style="padding-left:18px;margin:6px 0;">'; inList = true; }
+      html += `<li style="margin-bottom:4px;font-size:0.88rem;">${inlined.slice(2)}</li>`;
+    } else {
+      if (inList) { html += '</ul>'; inList = false; }
+      // Section headings (all-caps or strong-wrapped lines)
+      if (inlined.startsWith('<strong>') && inlined.endsWith('</strong>')) {
+        html += `<div style="margin:14px 0 4px;font-size:0.85rem;color:var(--accent);">${inlined}</div>`;
+      } else {
+        html += `<p style="font-size:0.88rem;margin-bottom:6px;line-height:1.6;">${inlined}</p>`;
+      }
+    }
+  }
+  if (inList) html += '</ul>';
+  return html;
+}
+
+function exportAnswer() {
+  const answer = document.getElementById('answer-area').value;
+  if (!answer) { toast('Nothing to copy yet!'); return; }
+  navigator.clipboard.writeText(`Question:\n${currentWritePrompt?.prompt}\n\nMy Answer:\n${answer}`).then(() => toast('📋 Answer copied to clipboard!'));
+}
+
+function emailAnswer() {
+  const answer = document.getElementById('answer-area').value;
+  const q = currentWritePrompt?.prompt || '';
+  const body = encodeURIComponent(`Question:\n${q}\n\nMy Answer:\n${answer}`);
+  window.open(`mailto:?subject=AimHigh%20GCSE%20Answer%20for%20Marking&body=${body}`);
+}
+
+// ═══════════════════════════════════════════════════════
+// PLANNER
+// ═══════════════════════════════════════════════════════
+function renderPlanner() {
+  if (state.plannerExamDate) {
+    document.getElementById('exam-date').value = state.plannerExamDate;
+    document.getElementById('study-days').value = state.plannerDays;
+    document.getElementById('study-mins').value = state.plannerMins;
+    buildPlan();
+  }
+}
+
+function buildPlan() {
+  const examDate = document.getElementById('exam-date').value;
+  const studyDays = parseInt(document.getElementById('study-days').value);
+  const studyMins = parseInt(document.getElementById('study-mins').value);
+
+  if (!examDate) { toast('Please set your exam date first.'); return; }
+
+  state.plannerExamDate = examDate;
+  state.plannerDays = studyDays;
+  state.plannerMins = studyMins;
+  awardBadge('planner_set');
+  saveState();
+
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const exam = new Date(examDate);
+  exam.setHours(0,0,0,0);
+  const daysLeft = Math.ceil((exam - today) / 86400000);
+
+  // Build a balanced weekly distribution rather than blocking first N days
+  // e.g. studyDays=3 → Mon, Wed, Fri; studyDays=4 → Mon,Tue,Thu,Sat; studyDays=5 → Mon-Fri
+  const studyDowSets = {
+    1: [1], 2: [1,4], 3: [1,3,5], 4: [1,2,4,6],
+    5: [1,2,3,4,5], 6: [1,2,3,4,5,6], 7: [0,1,2,3,4,5,6]
+  };
+  const studyDows = new Set(studyDowSets[Math.min(7, Math.max(1, studyDays))] || [1,2,3,4,5]);
+
+  const allTopics = [
+    ...SUBJECTS.english.topics.map(t => ({ ...t, subj: 'English', color: 'var(--eng)' })),
+    ...SUBJECTS.maths.topics.map(t => ({ ...t, subj: 'Maths', color: 'var(--math)' })),
+    ...SUBJECTS.science.topics.map(t => ({ ...t, subj: 'Science', color: 'var(--sci)' }))
+  ];
+
+  // Weight weaker topics more heavily (3× weak, 2× ok, 1× strong)
+  const weighted = [];
+  allTopics.forEach(t => {
+    const s = (state.topicProgress[t.id] || {}).strength || 'weak';
+    const weight = s === 'weak' ? 3 : s === 'ok' ? 2 : 1;
+    for (let i = 0; i < weight; i++) weighted.push(t);
+  });
+
+  const sessionTypes = ['Learn', 'Recall', 'Quiz', 'Practice', 'Mixed Review'];
+
+  // Exam-practice period: last 10% of days or last 7, whichever is smaller, min 3
+  const examPracticeDays = Math.max(3, Math.min(7, Math.floor(daysLeft * 0.1)));
+
+  let sessions = [];
+  let wi = 0;
+  for (let d = 0; d < daysLeft; d++) {
+    const date = new Date(today);
+    date.setDate(today.getDate() + d);
+    const dow = date.getDay();
+    if (!studyDows.has(dow)) continue;
+
+    const daysRemaining = daysLeft - d;
+    if (daysRemaining <= examPracticeDays) {
+      sessions.push({
+        date,
+        topic: { name: 'Mixed Exam Practice', icon: '🎯', subj: 'All Subjects', color: 'var(--accent)' },
+        type: 'Exam Practice'
+      });
+    } else {
+      const t = weighted[wi % weighted.length];
+      const type = sessionTypes[sessions.length % sessionTypes.length];
+      sessions.push({ date, topic: t, type });
+      wi++;
+    }
+  }
+
+  const output = document.getElementById('planner-output');
+
+  // Compute on-track status
+  const studySessionsPassed = sessions.filter(s => s.date < today).length;
+  const sessionsDoneCount = state.sessionsDone.length;
+  const onTrack = sessionsDoneCount >= studySessionsPassed;
+  const behindBy = Math.max(0, studySessionsPassed - sessionsDoneCount);
+
+  // Group by week
+  const weeks = {};
+  sessions.forEach(s => {
+    const w = getWeekKey(s.date);
+    if (!weeks[w]) weeks[w] = [];
+    weeks[w].push(s);
+  });
+
+  let html = `
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px;">
+      <div class="card card-accent card-sm" style="text-align:center;padding:16px;">
+        <div style="font-size:2rem;font-weight:900;font-family:'Space Mono',monospace;color:var(--accent);">${Math.max(0,daysLeft)}</div>
+        <div style="color:var(--muted);font-size:0.75rem;margin-top:2px;">Days to exam</div>
+      </div>
+      <div class="card card-sm" style="text-align:center;padding:16px;">
+        <div style="font-size:2rem;font-weight:900;font-family:'Space Mono',monospace;color:var(--math);">${sessions.length}</div>
+        <div style="color:var(--muted);font-size:0.75rem;margin-top:2px;">Sessions planned</div>
+      </div>
+      <div class="card card-sm" style="text-align:center;padding:16px;">
+        <div style="font-size:2rem;font-weight:900;font-family:'Space Mono',monospace;color:${onTrack ? 'var(--green)' : 'var(--eng)'};">${onTrack ? '✓' : '-' + behindBy}</div>
+        <div style="color:var(--muted);font-size:0.75rem;margin-top:2px;">${onTrack ? 'On track' : 'Sessions behind'}</div>
+      </div>
+      <div class="card card-sm" style="text-align:center;padding:16px;">
+        <div style="font-size:2rem;font-weight:900;font-family:'Space Mono',monospace;color:var(--gold);">${sessionsDoneCount}</div>
+        <div style="color:var(--muted);font-size:0.75rem;margin-top:2px;">Done so far</div>
+      </div>
+    </div>`;
+
+  if (behindBy > 0) {
+    html += `<div style="background:rgba(255,107,107,0.1);border:1px solid rgba(255,107,107,0.3);border-radius:10px;padding:12px 16px;margin-bottom:14px;font-size:0.88rem;">
+      ⚠️ You're <strong style="color:var(--eng);">${behindBy} session${behindBy > 1 ? 's' : ''} behind</strong> — try to catch up this week by doing an extra session on a non-study day.
+    </div>`;
+  }
+
+  Object.entries(weeks).forEach(([week, daySessions]) => {
+    html += `<div class="card" style="margin-bottom:14px;">
+      <div style="font-weight:700;font-size:0.8rem;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px;">${week}</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;">
+        ${daySessions.map(s => {
+          const isToday = s.date.toDateString() === new Date().toDateString();
+          const isPast = s.date < today;
+          const done = state.sessionsDone.includes(s.date.toDateString());
+          const stateClass = isToday ? 'today' : done ? 'done' : (isPast && !done) ? 'overdue' : '';
+          return `<div class="planner-day ${stateClass}" onclick="toggleSession('${s.date.toDateString()}',this)" style="cursor:pointer;">
+            <div class="day-label">${s.date.toLocaleDateString('en-GB',{weekday:'short'})}</div>
+            <div class="day-date">${s.date.getDate()} ${s.date.toLocaleDateString('en-GB',{month:'short'})}</div>
+            <div style="font-size:0.68rem;color:${s.topic.color};margin-top:5px;font-weight:700;">${s.topic.icon} ${s.topic.subj}</div>
+            <div class="day-task">${s.topic.name}</div>
+            <div style="font-size:0.68rem;margin-top:4px;color:var(--muted);">${s.type} · ${studyMins}min</div>
+            ${isToday ? '<div style="font-size:0.62rem;color:var(--accent);font-weight:800;margin-top:4px;letter-spacing:0.5px;">TODAY ←</div>' : ''}
+            ${done ? '<div style="font-size:0.62rem;color:var(--green);font-weight:700;margin-top:3px;">✓ Done</div>' : ''}
+            ${isPast && !done && !isToday ? '<div style="font-size:0.62rem;color:var(--eng);font-weight:700;margin-top:3px;">Missed</div>' : ''}
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  });
+
+  output.innerHTML = html;
+  updateDaysLeft();
+  toast('📅 Revision plan built!');
+}
+
+function getWeekKey(date) {
+  const d = new Date(date);
+  d.setDate(d.getDate() - d.getDay() + 1);
+  return `Week of ${d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}`;
+}
+
+function toggleSession(dateStr, el) {
+  if (state.sessionsDone.includes(dateStr)) {
+    state.sessionsDone = state.sessionsDone.filter(d => d !== dateStr);
+    el.classList.remove('done');
+  } else {
+    state.sessionsDone.push(dateStr);
+    el.classList.add('done');
+    addXP(15);
+    updateStreak();
+    toast('✅ Session marked as done! +15 XP');
+  }
+  saveState();
+  updateNavBadges();
+}
+
+function updateDaysLeft() {
+  if (!state.plannerExamDate) return;
+  const days = Math.ceil((new Date(state.plannerExamDate) - new Date()) / 86400000);
+  const el = document.getElementById('days-left');
+  if (el) el.textContent = days > 0 ? days : 'NOW!';
+}
+
+// ═══════════════════════════════════════════════════════
+// PROGRESS
+// ═══════════════════════════════════════════════════════
+function renderProgress() {
+  document.getElementById('p-quizzes').textContent = state.quizzesDone;
+  const acc = state.quizTotal > 0 ? Math.round(state.quizCorrect / state.quizTotal * 100) : 0;
+  document.getElementById('p-correct').textContent = acc + '%';
+  document.getElementById('p-answers').textContent = state.answersWritten;
+
+  // Mastery per subject
+  const calculate = (prefix) => {
+    const topics = Object.keys(state.topicProgress).filter(k => k.startsWith(prefix));
+    const allTopics = prefix === 'eng_' ? SUBJECTS.english.topics : prefix === 'math_' ? SUBJECTS.maths.topics : SUBJECTS.science.topics;
+    const strong = topics.filter(k => state.topicProgress[k].strength === 'strong').length;
+    return Math.round(strong / allTopics.length * 100);
+  };
+
+  [['eng_', 'eng'], ['math_', 'math'], ['sci_', 'sci']].forEach(([prefix, id]) => {
+    const pct = calculate(prefix);
+    document.getElementById('mastery-' + id).style.width = pct + '%';
+    document.getElementById('mastery-' + id + '-pct').textContent = pct + '%';
+  });
+
+  // Topic breakdown
+  const el = document.getElementById('topic-breakdown');
+  const allTopics = [...SUBJECTS.english.topics, ...SUBJECTS.maths.topics, ...SUBJECTS.science.topics];
+  el.innerHTML = allTopics.map(t => {
+    const tp = state.topicProgress[t.id] || { strength: 'weak', score: 0 };
+    const autoTag = tp.autoInferred ? `<span style="font-size:0.62rem;color:var(--muted);margin-left:4px;">auto</span>` : '';
+    return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+      <div style="font-size:1.1rem;">${t.icon}</div>
+      <div style="flex:1;font-size:0.82rem;">${t.name}${autoTag}</div>
+      <span class="topic-strength strength-${tp.strength}">${tp.strength === 'weak' ? '⚠️' : tp.strength === 'ok' ? '👍' : '✅'} ${tp.strength}</span>
+    </div>`;
+  }).join('');
+
+  // Wrong questions panel
+  const wqEl = document.getElementById('wrong-questions-panel');
+  if (wqEl) {
+    const wrong = Object.values(state.wrongQuestions || {})
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 8);
+    if (wrong.length) {
+      wqEl.innerHTML = wrong.map(w => `
+        <div style="display:flex;align-items:start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="background:rgba(255,107,107,0.2);color:var(--eng);border-radius:6px;padding:2px 7px;font-size:0.75rem;font-weight:700;flex-shrink:0;">${w.count}×</div>
+          <div style="font-size:0.84rem;line-height:1.4;">${w.q}</div>
+        </div>`).join('');
+    } else {
+      wqEl.innerHTML = '<p style="color:var(--muted);font-size:0.88rem;">No wrong answers recorded yet — complete some quizzes.</p>';
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// REWARDS & XP
+// ═══════════════════════════════════════════════════════
+function addXP(amount) {
+  state.xp += amount;
+  state.level = Math.floor(state.xp / 100) + 1;
+  saveState();
+  updateNavBadges();
+}
+
+const LEVEL_NAMES = ['Beginner', 'Learner', 'Student', 'Scholar', 'Achiever', 'Expert', 'Master', 'Champion', 'Legend', 'Genius'];
+
+function renderRewards() {
+  const lvl = state.level;
+  document.getElementById('level-display').textContent = lvl;
+  document.getElementById('level-name').textContent = LEVEL_NAMES[Math.min(lvl - 1, LEVEL_NAMES.length - 1)];
+  const xpInLevel = state.xp - (lvl - 1) * 100;
+  const xpNeeded = 100;
+  document.getElementById('xp-display').textContent = `${state.xp} XP total · ${xpInLevel} / ${xpNeeded} this level`;
+  document.getElementById('xp-bar').style.width = Math.min(100, xpInLevel / xpNeeded * 100) + '%';
+  document.getElementById('level-next').textContent = `${xpNeeded - xpInLevel} XP to Level ${lvl + 1}`;
+
+  const grid = document.getElementById('badges-grid');
+  grid.innerHTML = BADGES.map(b => {
+    const earned = state.badges.includes(b.id);
+    return `<div class="card card-sm" style="text-align:center;opacity:${earned ? 1 : 0.4};">
+      <div class="badge ${earned ? 'earned' : ''}" style="margin:0 auto 8px;">${b.icon}</div>
+      <div style="font-size:0.8rem;font-weight:700;">${b.name}</div>
+      <div style="font-size:0.7rem;color:var(--muted);margin-top:2px;">${b.desc}</div>
+      ${earned ? '<div style="font-size:0.65rem;color:var(--gold);margin-top:4px;">✓ Earned</div>' : ''}
+    </div>`;
+  }).join('');
+}
+
+function awardBadge(id) {
+  if (!state.badges.includes(id)) {
+    state.badges.push(id);
+    const b = BADGES.find(b => b.id === id);
+    if (b) toast(`🎖️ Badge unlocked: ${b.name}!`);
+    addXP(50);
+    saveState();
+  }
+}
+
+function checkBadges() {
+  if (state.streak >= 3) awardBadge('streak3');
+  if (state.streak >= 7) awardBadge('streak7');
+  if (state.streak >= 30) awardBadge('streak30');
+  if (state.xp >= 100) awardBadge('xp100');
+  if (state.xp >= 500) awardBadge('xp500');
+  if (state.xp >= 1000) awardBadge('xp1000');
+
+  const engDone = SUBJECTS.english.topics.every(t => (state.topicProgress[t.id] || {}).strength === 'strong');
+  const mathDone = SUBJECTS.maths.topics.every(t => (state.topicProgress[t.id] || {}).strength === 'strong');
+  const sciDone = SUBJECTS.science.topics.every(t => (state.topicProgress[t.id] || {}).strength === 'strong');
+  if (engDone) awardBadge('all_english');
+  if (mathDone) awardBadge('all_maths');
+  if (sciDone) awardBadge('all_science');
+}
+
+// ═══════════════════════════════════════════════════════
+// STREAK
+// ═══════════════════════════════════════════════════════
+function updateStreak() {
+  const today = new Date().toDateString();
+  if (state.lastStudyDate === today) return;
+
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const twoDaysAgo = new Date();
+  twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+
+  if (state.lastStudyDate === yesterday.toDateString()) {
+    // Consecutive day — increment
+    state.streak++;
+    // Restore one grace day (capped at 1)
+    state.streakGraceDays = Math.min(1, (state.streakGraceDays || 0) + 1);
+  } else if (state.lastStudyDate === twoDaysAgo.toDateString() && (state.streakGraceDays || 0) > 0) {
+    // Missed exactly one day and have a grace day — preserve streak, spend grace
+    state.streak++;
+    state.streakGraceDays = 0;
+    toast('🛡️ Grace day used — streak preserved!');
+  } else if (state.lastStudyDate !== today) {
+    // Streak broken
+    state.streak = 1;
+    state.streakGraceDays = 1; // reset grace on new streak
+  }
+
+  state.lastStudyDate = today;
+  saveState();
+  updateNavBadges();
+}
+
+// ═══════════════════════════════════════════════════════
+// TIPS
+// ═══════════════════════════════════════════════════════
+function tipsTab(category) {
+  document.querySelectorAll('#tips-tabs .tab-btn').forEach(b => b.classList.remove('active'));
+  const tabs = document.querySelectorAll('#tips-tabs .tab-btn');
+  const cats = ['recall','timing','answering','mistakes','confidence','examday'];
+  const idx = cats.indexOf(category);
+  if (tabs[idx]) tabs[idx].classList.add('active');
+
+  const tips = TIPS[category] || [];
+  document.getElementById('tips-content').innerHTML = `<div class="fadein">
+    ${tips.map(t => `<div class="card" style="margin-bottom:12px;">
+      <div style="font-weight:700;margin-bottom:8px;color:var(--accent);">💡 ${t.title}</div>
+      <p style="font-size:0.9rem;line-height:1.6;color:var(--muted);">${t.tip}</p>
+    </div>`).join('')}
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// MODAL
+// ═══════════════════════════════════════════════════════
+function openModal() {
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+document.getElementById('modal-overlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// ═══════════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════════
+let toastTimer;
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ═══════════════════════════════════════════════════════
+// MOBILE NAV — bottom nav for mobile
+// ═══════════════════════════════════════════════════════
+const mobileNavHTML = `
+<div id="mobile-nav" style="display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(10,10,18,0.96);backdrop-filter:blur(20px);border-top:1px solid var(--border);z-index:100;padding:8px 0;">
+  <div style="display:flex;justify-content:space-around;">
+    <button onclick="goTo('dashboard')" style="background:none;border:none;color:var(--muted);font-size:0.65rem;font-family:'Outfit',sans-serif;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 8px;cursor:pointer;">🏠<span>Home</span></button>
+    <button onclick="goTo('english')" style="background:none;border:none;color:var(--eng);font-size:0.65rem;font-family:'Outfit',sans-serif;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 8px;cursor:pointer;">📖<span>English</span></button>
+    <button onclick="goTo('maths')" style="background:none;border:none;color:var(--math);font-size:0.65rem;font-family:'Outfit',sans-serif;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 8px;cursor:pointer;">🔢<span>Maths</span></button>
+    <button onclick="goTo('science')" style="background:none;border:none;color:var(--sci);font-size:0.65rem;font-family:'Outfit',sans-serif;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 8px;cursor:pointer;">🔬<span>Science</span></button>
+    <button onclick="goTo('planner')" style="background:none;border:none;color:var(--muted);font-size:0.65rem;font-family:'Outfit',sans-serif;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 8px;cursor:pointer;">📅<span>Plan</span></button>
+    <button onclick="goTo('rewards')" style="background:none;border:none;color:var(--gold);font-size:0.65rem;font-family:'Outfit',sans-serif;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 8px;cursor:pointer;">🏆<span>Rewards</span></button>
+  </div>
+</div>`;
+document.body.insertAdjacentHTML('beforeend', mobileNavHTML);
+
+function handleMobileNav() {
+  const mn = document.getElementById('mobile-nav');
+  if (window.innerWidth <= 600) {
+    mn.style.display = 'block';
+    document.querySelectorAll('.screen').forEach(s => s.style.paddingBottom = '72px');
+  } else {
+    mn.style.display = 'none';
+    document.querySelectorAll('.screen').forEach(s => s.style.paddingBottom = '');
+  }
+}
+window.addEventListener('resize', handleMobileNav);
+handleMobileNav();
+
+// ═══════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════
+function init() {
+  renderDashboard();
+  updateNavBadges();
+  tipsTab('recall');
+  // Subject screens render lazily on first goTo() — no eager render needed
+}
+
+init();
+</script>
+</body>
+</html>
